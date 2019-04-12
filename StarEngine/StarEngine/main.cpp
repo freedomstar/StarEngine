@@ -1,19 +1,14 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <fstream>
+#include <cassert>
+#include <string>
+#include <cstring>
 
-const char *vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-const char *fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\n\0";
+using namespace std;
+
+char shaderPath[1000];
 
 float vertices[] = {
 	0.5f, 0.5f, 0.0f,   // срио╫г
@@ -38,10 +33,36 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void render()
+char* readShader(string file)
 {
-	
+	string pp = shaderPath;
+	file = pp +"\\Shader\\"+ file;          
+	cout << file;
+	int i = 0;
+	ifstream infile;
+	infile.open(file, ios::in);
+	file = "";
+	while (!infile.eof())           
+	{
+		string b;
 
+		getline(infile, b);
+		file +=b+'\n';
+		i++;                   
+	}
+	infile.close();
+	char* c=new char[1000];
+	strcpy_s(c,1000 ,file.c_str());
+	cout << file;
+	return c;
+}
+
+void render(int VAO,int shaderProgram)
+{
+	glUseProgram(shaderProgram);
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 
 }
 
@@ -70,11 +91,29 @@ int main()
 	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+	GetCurrentDirectory(1000, shaderPath);
+
 	unsigned int vertexShader;
+	char* vertexShaderSource= readShader("CustomVertexShader");
+
+	//const char *vertexShaderSource = "#version 330 core\n"
+	//	"layout (location = 0) in vec3 aPos;\n"
+	//	"void main()\n"
+	//	"{\n"
+	//	"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+	//	"}\0";
+
+
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 	glCompileShader(vertexShader);
-
+	char* fragmentShaderSource = readShader("CustomFragmentShader");
+	//const char *fragmentShaderSource = "#version 330 core\n"
+	//	"out vec4 FragColor;\n"
+	//	"void main()\n"
+	//	"{\n"
+	//	"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+	//	"}\n\0";
 	unsigned int fragmentShader;
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
@@ -113,11 +152,8 @@ int main()
 		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		//glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(shaderProgram);
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-		render();
+
+		render(VAO,shaderProgram);
 
 
 		glfwSwapBuffers(window);
