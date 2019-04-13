@@ -14,10 +14,10 @@ char projectPath[1000];
 
 float vertices[] = {
 	// positions          // colors           // texture coords
-	 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f, // top right
-	 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f, // bottom right
-	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, // bottom left
-	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f  // top left 
+	 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+	 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
 };
 
 unsigned int indices[] = { // 注意索引从0开始! 
@@ -77,7 +77,7 @@ int main()
 	fragmentPath += "\\Shader\\CustomFragmentShader";
 	Shader shaderProgram(vertexPath.c_str(), fragmentPath.c_str());
 	string tex1Path = projectPath;
-	tex1Path+= "\\Resource\\Texture\\timg (1).jpg"; //测试好几张图片，有些正常有些不正常，怀疑是这个stb_image库的问题
+	tex1Path+= "\\Resource\\Texture\\timg (3).jpg"; //测试好几张图片，有些正常有些不正常，怀疑是这个stb_image库的问题
 	Texture tex1(tex1Path.c_str(), GL_REPEAT, GL_LINEAR);
 	//glBindTexture(GL_TEXTURE_2D, tex1.texture);
 
