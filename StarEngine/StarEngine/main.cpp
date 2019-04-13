@@ -35,26 +35,20 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 char* readShader(string file)
 {
-	string pp = shaderPath;
-	file = pp +"\\Shader\\"+ file;          
-	cout << file;
-	int i = 0;
-	ifstream infile;
-	infile.open(file, ios::in);
-	file = "";
-	while (!infile.eof())           
-	{
-		string b;
-
-		getline(infile, b);
-		file +=b+'\n';
-		i++;                   
-	}
-	infile.close();
-	char* c=new char[1000];
-	strcpy_s(c,1000 ,file.c_str());
-	cout << file;
-	return c;
+	string sp = shaderPath;
+	file = sp +"\\Shader\\"+ file;
+	std::ifstream t;
+	int length = 0;
+	t.open(file);
+	t.seekg(0, std::ios::end);
+	length = t.tellg();
+	t.seekg(0, std::ios::beg);
+	char* buffer = new char[length];
+	memset(buffer, 0, length - 1);
+	t.read(buffer, length);
+	t.close();
+	file = buffer;
+	return buffer;
 }
 
 void render(int VAO,int shaderProgram)
@@ -95,25 +89,10 @@ int main()
 
 	unsigned int vertexShader;
 	char* vertexShaderSource= readShader("CustomVertexShader");
-
-	//const char *vertexShaderSource = "#version 330 core\n"
-	//	"layout (location = 0) in vec3 aPos;\n"
-	//	"void main()\n"
-	//	"{\n"
-	//	"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-	//	"}\0";
-
-
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 	glCompileShader(vertexShader);
 	char* fragmentShaderSource = readShader("CustomFragmentShader");
-	//const char *fragmentShaderSource = "#version 330 core\n"
-	//	"out vec4 FragColor;\n"
-	//	"void main()\n"
-	//	"{\n"
-	//	"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-	//	"}\n\0";
 	unsigned int fragmentShader;
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
