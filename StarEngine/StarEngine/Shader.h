@@ -13,6 +13,7 @@ public:
 	void setBool(const string &name, bool value);
 	void setInt(const string &name, int value);
 	void setFloat(const string &name, float value);
+	unsigned int shaderProgram;
 	~Shader();
 private:
 	char* readShaderFile(const char* Path);
@@ -22,6 +23,6 @@ private:
 	char* fragmentShaderSource;
 	unsigned int vertexShader;
 	unsigned int fragmentShader;
-	unsigned int shaderProgram;
+	
 };
 

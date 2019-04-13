@@ -5,6 +5,9 @@
 #include <fstream>
 #include "Shader.h"
 #include "Texture.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 
@@ -39,7 +42,14 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void render(int VAO,Shader &shaderProgram)
 {
+	glm::mat4 trans= glm::mat4(1.0f);
+	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+	trans = glm::translate(trans, glm::vec3(0.5f+ sin((float)glfwGetTime()), -0.5f, 0.0f));
+	trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 1.0f));
+	trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
 	shaderProgram.Use();
+	unsigned int transformLoc = glGetUniformLocation(shaderProgram.shaderProgram, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -54,7 +64,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	GLFWwindow* window = glfwCreateWindow(1500, 1000, "StarEngine", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(800, 600, "StarEngine", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -68,7 +78,7 @@ int main()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-	glViewport(0, 0, 1500, 1000);
+	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	GetCurrentDirectory(1000, projectPath);
 	string vertexPath = projectPath;
@@ -77,7 +87,7 @@ int main()
 	fragmentPath += "\\Shader\\CustomFragmentShader";
 	Shader shaderProgram(vertexPath.c_str(), fragmentPath.c_str());
 	string tex1Path = projectPath;
-	tex1Path+= "\\Resource\\Texture\\timg (3).jpg"; //测试好几张图片，有些正常有些不正常，怀疑是这个stb_image库的问题
+	tex1Path+= "\\Resource\\Texture\\timg (3).jpg"; 
 	Texture tex1(tex1Path.c_str(), GL_REPEAT, GL_LINEAR);
 	//glBindTexture(GL_TEXTURE_2D, tex1.texture);
 
@@ -114,6 +124,7 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBindTexture(GL_TEXTURE_2D, tex1.texture);
+
 		render(VAO,shaderProgram);
 
 		glfwSwapBuffers(window);
