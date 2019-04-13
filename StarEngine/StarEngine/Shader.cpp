@@ -43,6 +43,8 @@ char* Shader::readShaderFile(const char* Path)
 	memset(buffer, 0, length - 1);
 	t.read(buffer, length);
 	t.close();
+	Path = buffer;
+	cout << Path;
 	return buffer;
 }
 

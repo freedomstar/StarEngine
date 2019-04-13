@@ -1,20 +1,23 @@
+#define STB_IMAGE_IMPLEMENTATION
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
 #include "Shader.h"
+#include "Texture.h"
 
 
 
 using namespace std;
 
-char shaderPath[1000];
+char projectPath[1000];
 
 float vertices[] = {
-	0.5f, 0.5f, 0.0f,0.5f, 0.5f, 0.0f,   // 右上角
-	0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f, // 右下角
-	-0.5f, -0.5f, 0.0f,0.0f, 0.0f, 0.5f, // 左下角
-	-0.5f, 0.5f, 0.0f,0.5f, 0.5f, 0.0f    // 左上角
+	// positions          // colors           // texture coords
+	 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f, // top right
+	 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f, // bottom right
+	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, // bottom left
+	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f  // top left 
 };
 
 unsigned int indices[] = { // 注意索引从0开始! 
@@ -51,7 +54,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "StarEngine", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1500, 1000, "StarEngine", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -65,14 +68,18 @@ int main()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 1500, 1000);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	GetCurrentDirectory(1000, shaderPath);
-	string vertexPath = shaderPath;
+	GetCurrentDirectory(1000, projectPath);
+	string vertexPath = projectPath;
 	vertexPath += "\\Shader\\CustomVertexShader";
-	string fragmentPath = shaderPath;
+	string fragmentPath = projectPath;
 	fragmentPath += "\\Shader\\CustomFragmentShader";
 	Shader shaderProgram(vertexPath.c_str(), fragmentPath.c_str());
+	string tex1Path = projectPath;
+	tex1Path+= "\\Resource\\Texture\\test.png";
+	Texture tex1(tex1Path.c_str(), GL_REPEAT, GL_LINEAR);
+	//glBindTexture(GL_TEXTURE_2D, tex1.texture);
 
 	unsigned int VBO;
 	unsigned int VAO;
@@ -89,16 +96,24 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	// texture coord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
 
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glBindTexture(GL_TEXTURE_2D, tex1.texture);
 		render(VAO,shaderProgram);
 
 		glfwSwapBuffers(window);
@@ -107,6 +122,7 @@ int main()
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 	glfwTerminate();
 
 	return 0;
