@@ -34,8 +34,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 
-void render(int VAO)
+void render(int VAO,Shader &shaderProgram)
 {
+	shaderProgram.Use();
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -72,7 +73,7 @@ int main()
 	string fragmentPath = shaderPath;
 	fragmentPath += "\\Shader\\CustomFragmentShader";
 	Shader shaderProgram(vertexPath.c_str(), fragmentPath.c_str());
-	shaderProgram.Use();
+
 	unsigned int VBO;
 	unsigned int VAO;
 	unsigned int EBO;
@@ -98,12 +99,7 @@ int main()
 	{
 		processInput(window);
 
-		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		//glClear(GL_COLOR_BUFFER_BIT);
-
-
-		render(VAO);
-
+		render(VAO,shaderProgram);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
