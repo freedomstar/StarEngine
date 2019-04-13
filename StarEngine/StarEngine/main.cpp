@@ -2,19 +2,19 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
-#include <cassert>
-#include <string>
-#include <cstring>
+#include "Shader.h"
+
+
 
 using namespace std;
 
 char shaderPath[1000];
 
 float vertices[] = {
-	0.5f, 0.5f, 0.0f,   // 右上角
-	0.5f, -0.5f, 0.0f,  // 右下角
-	-0.5f, -0.5f, 0.0f, // 左下角
-	-0.5f, 0.5f, 0.0f   // 左上角
+	0.5f, 0.5f, 0.0f,0.5f, 0.5f, 0.0f,   // 右上角
+	0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f, // 右下角
+	-0.5f, -0.5f, 0.0f,0.0f, 0.0f, 0.5f, // 左下角
+	-0.5f, 0.5f, 0.0f,0.5f, 0.5f, 0.0f    // 左上角
 };
 
 unsigned int indices[] = { // 注意索引从0开始! 
@@ -33,27 +33,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-char* readShader(string file)
-{
-	string sp = shaderPath;
-	file = sp +"\\Shader\\"+ file;
-	std::ifstream t;
-	int length = 0;
-	t.open(file);
-	t.seekg(0, std::ios::end);
-	length = t.tellg();
-	t.seekg(0, std::ios::beg);
-	char* buffer = new char[length];
-	memset(buffer, 0, length - 1);
-	t.read(buffer, length);
-	t.close();
-	file = buffer;
-	return buffer;
-}
 
-void render(int VAO,int shaderProgram)
+void render(int VAO)
 {
-	glUseProgram(shaderProgram);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -84,28 +66,13 @@ int main()
 	}
 	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
 	GetCurrentDirectory(1000, shaderPath);
-
-	unsigned int vertexShader;
-	char* vertexShaderSource= readShader("CustomVertexShader");
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-	char* fragmentShaderSource = readShader("CustomFragmentShader");
-	unsigned int fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
+	string vertexPath = shaderPath;
+	vertexPath += "\\Shader\\CustomVertexShader";
+	string fragmentPath = shaderPath;
+	fragmentPath += "\\Shader\\CustomFragmentShader";
+	Shader shaderProgram(vertexPath.c_str(), fragmentPath.c_str());
+	shaderProgram.Use();
 	unsigned int VBO;
 	unsigned int VAO;
 	unsigned int EBO;
@@ -121,8 +88,11 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -132,7 +102,7 @@ int main()
 		//glClear(GL_COLOR_BUFFER_BIT);
 
 
-		render(VAO,shaderProgram);
+		render(VAO);
 
 
 		glfwSwapBuffers(window);
