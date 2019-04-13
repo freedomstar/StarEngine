@@ -11,7 +11,5 @@ public:
 	unsigned int texture;
 	Texture(const char *path, int  wrapMode, int filterMode);
 	~Texture();
-private:
-	static bool isInit;
 };
 

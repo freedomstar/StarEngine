@@ -77,7 +77,7 @@ int main()
 	fragmentPath += "\\Shader\\CustomFragmentShader";
 	Shader shaderProgram(vertexPath.c_str(), fragmentPath.c_str());
 	string tex1Path = projectPath;
-	tex1Path+= "\\Resource\\Texture\\test.png";
+	tex1Path+= "\\Resource\\Texture\\timg (1).jpg"; //测试好几张图片，有些正常有些不正常，怀疑是这个stb_image库的问题
 	Texture tex1(tex1Path.c_str(), GL_REPEAT, GL_LINEAR);
 	//glBindTexture(GL_TEXTURE_2D, tex1.texture);
 
