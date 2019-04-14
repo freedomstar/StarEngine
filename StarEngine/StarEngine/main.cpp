@@ -20,12 +20,22 @@ float vertices[] = {
 	 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
 	 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
 	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f,  // top left 
+	 0.5f,  0.5f, -1.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // back top right
+	 0.5f, -0.5f, -1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // back bottom right
+	-0.5f, -0.5f, -1.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // back bottom left
+	-0.5f,  0.5f, -1.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // back top left 
 };
 
-unsigned int indices[] = { // 注意索引从0开始! 
-	0, 1, 3, // 第一个三角形
-	1, 2, 3  // 第二个三角形
+unsigned int indices[] = {
+	7, 5, 4,
+	7, 6, 5,
+	7, 3, 6,
+	3, 2, 6,
+	4, 5, 0,
+	0, 5, 1,
+	0, 1, 3, 
+	1, 2, 3  
 };
 
 void processInput(GLFWwindow *window)
@@ -42,16 +52,21 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void render(int VAO,Shader &shaderProgram)
 {
-	glm::mat4 trans= glm::mat4(1.0f);
-	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-	trans = glm::translate(trans, glm::vec3(0.5f+ sin((float)glfwGetTime()), -0.5f, 0.0f));
-	trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 1.0f));
-	trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+	glm::mat4 model= glm::mat4(1.0f);
+	model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::mat4 view= glm::mat4(1.0f);;
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	glm::mat4 projection=glm::mat4(1.0f);;
+	projection = glm::perspective(glm::radians(45.0f),800.0f/600.0f, 0.1f, 100.0f);
 	shaderProgram.Use();
-	unsigned int transformLoc = glGetUniformLocation(shaderProgram.shaderProgram, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+	unsigned int modelLoc = glGetUniformLocation(shaderProgram.shaderProgram, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	unsigned int viewLoc = glGetUniformLocation(shaderProgram.shaderProgram, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	unsigned int projectionLoc = glGetUniformLocation(shaderProgram.shaderProgram, "projection");
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES,24, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 }
@@ -63,7 +78,6 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
 	GLFWwindow* window = glfwCreateWindow(800, 600, "StarEngine", NULL, NULL);
 	if (window == NULL)
 	{
@@ -79,6 +93,9 @@ int main()
 		return -1;
 	}
 	glViewport(0, 0, 800, 600);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	GetCurrentDirectory(1000, projectPath);
 	string vertexPath = projectPath;
@@ -121,7 +138,8 @@ int main()
 	{
 		processInput(window);
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBindTexture(GL_TEXTURE_2D, tex1.texture);
 
