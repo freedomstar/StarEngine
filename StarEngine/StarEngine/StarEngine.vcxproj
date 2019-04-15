@@ -79,9 +79,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -121,15 +123,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Camera.cpp" />
+    <ClCompile Include="Code\GameObject.cpp" />
     <ClCompile Include="Code\glad.c" />
     <ClCompile Include="Code\main.cpp" />
     <ClCompile Include="Code\Shader.cpp" />
     <ClCompile Include="Code\Texture.cpp" />
+    <ClCompile Include="Code\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Camera.h" />
+    <ClInclude Include="Code\GameObject.h" />
     <ClInclude Include="Code\Shader.h" />
     <ClInclude Include="Code\stb_image.h" />
     <ClInclude Include="Code\Texture.h" />
+    <ClInclude Include="Code\Time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

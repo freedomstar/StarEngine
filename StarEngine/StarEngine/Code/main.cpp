@@ -8,10 +8,14 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Camera.h"
+#include "Time.h"
 
 
 
 using namespace std;
+
+Camera *camera;
 
 char projectPath[1000];
 
@@ -50,25 +54,26 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 
-void render(int VAO,Shader &shaderProgram)
+void render(int VAO,Shader &shaderProgram,Camera *camera)
 {
 	glm::mat4 model= glm::mat4(1.0f);
-	model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
-	glm::mat4 view= glm::mat4(1.0f);;
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-	glm::mat4 projection=glm::mat4(1.0f);;
-	projection = glm::perspective(glm::radians(45.0f),800.0f/600.0f, 0.1f, 100.0f);
+	camera->updateViewMatrix();
 	shaderProgram.Use();
 	unsigned int modelLoc = glGetUniformLocation(shaderProgram.shaderProgram, "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 	unsigned int viewLoc = glGetUniformLocation(shaderProgram.shaderProgram, "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(camera->viewMatrix));
 	unsigned int projectionLoc = glGetUniformLocation(shaderProgram.shaderProgram, "projection");
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(camera->projectionMatrix));
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES,24, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	camera->mouse_callback( window, xpos, ypos);
 }
 
 int main()
@@ -107,6 +112,9 @@ int main()
 	tex1Path+= "\\Resource\\Texture\\timg (3).jpg"; 
 	Texture tex1(tex1Path.c_str(), GL_REPEAT, GL_LINEAR);
 	//glBindTexture(GL_TEXTURE_2D, tex1.texture);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	camera = new 	Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), 45, 800.0f / 600.0f, 0.1, 100.0f);
 
 	unsigned int VBO;
 	unsigned int VAO;
@@ -132,18 +140,19 @@ int main()
 	// texture coord attribute
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
-
+	glfwSetCursorPosCallback(window, mouse_callback);
 
 	while (!glfwWindowShouldClose(window))
 	{
+		Time::UpdateTime();
 		processInput(window);
-
+		camera->processInput(window);
 		glClear(GL_DEPTH_BUFFER_BIT);
-		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBindTexture(GL_TEXTURE_2D, tex1.texture);
 
-		render(VAO,shaderProgram);
+		render(VAO,shaderProgram,camera);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -153,7 +162,10 @@ int main()
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
 	glfwTerminate();
+	delete camera;
 
 	return 0;
 }
+
+
 
