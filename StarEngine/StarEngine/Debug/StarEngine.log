@@ -1,2 +1,4 @@
-﻿  main.cpp
-  StarEngine.vcxproj -> E:\project\StarEngine\StarEngine\Debug\StarEngine.exe
+﻿  Shader.cpp
+e:\starengine\starengine\starengine\code\shader.cpp(42): warning C4244: “初始化”: 从“std::streamoff”转换到“unsigned int”，可能丢失数据
+e:\starengine\starengine\starengine\code\shader.cpp(43): warning C4244: “参数”: 从“std::streamoff”转换到“size_t”，可能丢失数据
+  StarEngine.vcxproj -> E:\StarEngine\StarEngine\Debug\StarEngine.exe
