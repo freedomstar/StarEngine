@@ -3,8 +3,9 @@
     "",
     "\\StarEngine",
     "\\StarEngine\\StarEngine",
-    "\\StarEngine\\StarEngine\\Code"
+    "\\StarEngine\\StarEngine\\Code",
+    "\\StarEngine\\StarEngine\\Shader"
   ],
-  "SelectedNode": "\\StarEngine\\StarEngine\\Code\\Texture.h",
+  "SelectedNode": "\\StarEngine\\StarEngine\\Code\\Camera.cpp",
   "PreviewInSolutionExplorer": false
 }

@@ -1,6 +1,9 @@
+
 #include "Shader.h"
-
-
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
@@ -31,21 +34,28 @@ void  Shader::Use()
 	glUseProgram(shaderProgram);
 }
 
-char* Shader::readShaderFile(const char* Path)
+ char* Shader::readShaderFile(const char* Path)
 {
-	std::ifstream t;
-	streamoff  length = 0;
-	t.open(Path);
-	t.seekg(0, std::ios::end);
-	length = t.tellg();
-	t.seekg(0, std::ios::beg);
-	char* buffer = new char[length];
-	memset(buffer, 0, length - 1);
-	t.read(buffer, length);
-	t.close();
-	//Path = buffer;
-	//cout << Path;
-	return buffer;
+
+	std::string shaderCode;
+	std::ifstream ShaderFile;
+	ShaderFile.exceptions(std::ifstream::badbit);
+	try
+	{
+		ShaderFile.open(Path);
+		std::stringstream ShaderStream;
+		ShaderStream << ShaderFile.rdbuf();
+		ShaderFile.close();
+		shaderCode = ShaderStream.str();
+	}
+	catch(std::ifstream::failure e)
+	{
+		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+	}
+	int len = shaderCode.length();
+	char *result=new char[len+1];
+	strcpy_s(result, len+1, shaderCode.c_str());
+	return result;
 }
 
 void Shader::checkShaderCompile(int shader,string type)
@@ -87,7 +97,8 @@ void Shader::setFloat(const string &name, float value)
 	glUniform1f(glGetUniformLocation(shaderProgram, name.c_str()), value);
 }
 
-
 Shader::~Shader()
 {
+	delete[] vertexShaderSource;
+	delete[] fragmentShaderSource;
 }
