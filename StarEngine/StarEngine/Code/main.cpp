@@ -10,6 +10,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Camera.h"
 #include "Time.h"
+#include <assimp/Importer.hpp>
 
 
 
