@@ -58,7 +58,7 @@ void Camera :: mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void Camera::processInput(GLFWwindow *window)
 {
 
-	float cameraSpeed = 0.5f*Time::deltaTime; 
+	float cameraSpeed = 2.0f*Time::deltaTime; 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		postition += cameraSpeed * cameraFront;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)

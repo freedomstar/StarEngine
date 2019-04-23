@@ -83,7 +83,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>assimp-vc140-mt.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -127,6 +127,9 @@
     <ClCompile Include="Code\GameObject.cpp" />
     <ClCompile Include="Code\glad.c" />
     <ClCompile Include="Code\main.cpp" />
+    <ClCompile Include="Code\Material.cpp" />
+    <ClCompile Include="Code\Mesh.cpp" />
+    <ClCompile Include="Code\Model.cpp" />
     <ClCompile Include="Code\Shader.cpp" />
     <ClCompile Include="Code\Texture.cpp" />
     <ClCompile Include="Code\Time.cpp" />
@@ -134,6 +137,9 @@
   <ItemGroup>
     <ClInclude Include="Code\Camera.h" />
     <ClInclude Include="Code\GameObject.h" />
+    <ClInclude Include="Code\Material.h" />
+    <ClInclude Include="Code\Mesh.h" />
+    <ClInclude Include="Code\Model.h" />
     <ClInclude Include="Code\Shader.h" />
     <ClInclude Include="Code\stb_image.h" />
     <ClInclude Include="Code\Texture.h" />
