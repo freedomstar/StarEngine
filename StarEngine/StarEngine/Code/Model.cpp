@@ -86,7 +86,7 @@ Model::~Model()
 	}
 }
 
-void Model::Draw(Camera *camera)
+void Model::Draw(Camera *camera, LightMgr &light)
 {
 
 	for (unsigned int i = 0; i < meshes.size(); i++)
@@ -102,6 +102,11 @@ void Model::Draw(Camera *camera)
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(camera->viewMatrix));
 		unsigned int projectionLoc = glGetUniformLocation(materialList.at(i)->shader->shaderProgram, "projection");
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(camera->projectionMatrix));
+
+		Light* dirlight = light.GetDirLight();
+		materialList.at(i)->shader->setVec3("light.FrontDir", dirlight->FrontDir.x, dirlight->FrontDir.y, dirlight->FrontDir.z);
+		materialList.at(i)->shader->setVec3("light.Color", dirlight->color->R, dirlight->color->G, dirlight->color->B);
+
 		materialList.at(i)->shader->Use();
 		for (unsigned int j = 0; j < materialList[i]->textures.size(); j++)
 		{

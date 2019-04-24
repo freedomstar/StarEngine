@@ -6,13 +6,14 @@
 #include <assimp/postprocess.h>
 #include<vector>
 #include "Camera.h"
+#include "LightMgr.h"
 
 class Model
 {
 public:
 	vector<Mesh>  meshes;
 	vector<Material*> materialList;
-	void Draw(Camera *camera);
+	void Draw(Camera *camera, LightMgr &light);
 	Model(string modelPath, vector< Material* > materialList);
 	~Model();
 

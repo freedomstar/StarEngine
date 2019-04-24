@@ -124,8 +124,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Code\Camera.cpp" />
+    <ClCompile Include="Code\Color.cpp" />
     <ClCompile Include="Code\GameObject.cpp" />
     <ClCompile Include="Code\glad.c" />
+    <ClCompile Include="Code\Light.cpp" />
+    <ClCompile Include="Code\LightMgr.cpp" />
     <ClCompile Include="Code\main.cpp" />
     <ClCompile Include="Code\Material.cpp" />
     <ClCompile Include="Code\Mesh.cpp" />
@@ -136,7 +139,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Camera.h" />
+    <ClInclude Include="Code\Color.h" />
     <ClInclude Include="Code\GameObject.h" />
+    <ClInclude Include="Code\Light.h" />
+    <ClInclude Include="Code\LightMgr.h" />
     <ClInclude Include="Code\Material.h" />
     <ClInclude Include="Code\Mesh.h" />
     <ClInclude Include="Code\Model.h" />

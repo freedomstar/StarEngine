@@ -13,6 +13,7 @@ public:
 	void setBool(const string &name, bool value);
 	void setInt(const string &name, int value);
 	void setFloat(const string &name, float value);
+	void setVec3(const std::string &name, float x, float y, float z);
 	unsigned int shaderProgram;
 	~Shader();
 private:
