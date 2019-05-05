@@ -1,3 +1,1 @@
-﻿  main.cpp
-d:\starengine\starengine\starengine\starengine\code\main.cpp(97): warning C4305: “参数”: 从“double”到“float”截断
-  StarEngine.vcxproj -> D:\StarEngine\StarEngine\StarEngine\Debug\StarEngine.exe
+﻿  StarEngine.vcxproj -> D:\StarEngine\StarEngine\Debug\StarEngine.exe
