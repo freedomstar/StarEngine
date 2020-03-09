@@ -1,4 +1,7 @@
 /StarEngine/Debug
 /StarEngine/x64
-StarEngine/.vs/StarEngine/v15/.suo
-StarEngine/.vs/StarEngine/v15/Browse.VC.db
+StarEngine/.vs
+StarEngine/.vs
+StarEngine/StarEngine/x64
+StarEngine/StarEngine/ThirdParty/boost_1_72_0
+
