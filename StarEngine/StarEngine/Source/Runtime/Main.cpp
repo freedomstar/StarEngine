@@ -8,11 +8,22 @@
 
 int main()
 {
-	SVector3 a(1, 2, 3);
-	SVector3 b(3, 2, 1);
-	SVector3 c = b ^ a;
-	std::cout << c.x << std::endl;
-	std::cout << c.y << std::endl;
-	std::cout << c.z << std::endl;
+	float fa[] = { 1,2,
+				   1,-1 };
+	SMatrix a = SMatrix(2, 2, fa);
+	float fb[] = { 1,2,-3,
+				   -1,1,2 };
+	SMatrix b = SMatrix(2, 3, fb);
+
+	SMatrix c = a * b;
+
+	for (int32 i = 0; i < b.Row; i++)
+	{
+		for (int32 j = 0; j < b.Column; j++)
+		{
+			std::cout << b.Matrix[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
 	return 0;
 }

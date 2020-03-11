@@ -1,16 +1,17 @@
 #pragma once
+#include "Core/SObject/SObject.h"
 
-class SVector
+class SVector :public SObject
 {
 public:
 	SVector();
 	~SVector();
 };
 
-class SVector2:SVector
+class SVector2 :SVector
 {
 public:
-	SVector2(float x,float y);
+	SVector2(float x, float y);
 	~SVector2();
 
 	float x = 0, y = 0;
@@ -57,7 +58,7 @@ public:
 	SVector3 operator ^(const SVector3& Vector3)
 	{
 		return SVector3(
-			(this->y * Vector3.z)-(this->z * Vector3.y), 
+			(this->y * Vector3.z) - (this->z * Vector3.y),
 			(this->z * Vector3.x) - (this->x * Vector3.z),
 			(this->x * Vector3.y) - (this->y * Vector3.x)
 		);
@@ -68,6 +69,3 @@ public:
 		return (this->x * Vector3.x) + (this->y * Vector3.y) + (this->z * Vector3.z);
 	};
 };
-
-
-

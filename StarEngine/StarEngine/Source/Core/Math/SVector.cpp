@@ -1,7 +1,8 @@
 #include "SVector.h"
 
 SVector::SVector()
-{}
+{
+}
 
 SVector::~SVector()
 {}
@@ -24,4 +25,3 @@ SVector3::SVector3(float x, float y, float z)
 
 SVector3::~SVector3()
 {}
-
