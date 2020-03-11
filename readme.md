@@ -3,12 +3,34 @@ My graph program dream playground~
 Project dependent boost 1.72 libraries,please download and compile boost librarie,then config the project before run~
 
 # Target:
-1.add myself math librarie
+
+## base:
+
+1.make myself math librarie
 
 2.c++ gc system
 
 3.c++ reflect system
 
-4.support DirectX 12 Vulkan
+4.try cross platform
 
-5.try cross platform
+## render:
+
+1.support opengl DirectX 12 Vulkan
+
+2.pbr
+
+3.Ibl
+
+4.try to real time ray tracing
+
+## physics:
+
+I don't have any idea about game physics now~
+
+## audio:
+
+I don't have any idea about game audio now~
+
+## script:
+using lua + c++ or maybe make a new script by my self
