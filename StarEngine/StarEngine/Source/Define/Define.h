@@ -1,4 +1,5 @@
 #pragma once
+//#include "Core/SObject/SObject.h"
 
 // Unsigned base types.
 typedef unsigned char 		uint8;		// 8-bit  unsigned.
@@ -20,3 +21,17 @@ typedef uint16				CHAR16;		// A 16-bit character type - In-memory only.  16-bit 
 typedef uint32				CHAR32;		// A 32-bit character type - In-memory only.  32-bit representation.  Should really be char32_t but making this the generic option is easier for compilers which don't fully support C++11 yet (i.e. MSVC).
 typedef WIDECHAR			TCHAR;		// A switchable character  - In-memory only.  Either ANSICHAR or WIDECHAR, depending on a licensee's requirements.
 
+template <class T>
+inline T* NewSObject()
+{
+	T* obj = new T();
+	SObject* sobj = dynamic_cast<SObject*>(obj);
+	if (sobj == nullptr)
+	{
+		delete obj;
+		return nullptr;
+	}
+	SGarbageCollectionMgr* GarbageCollectionMgr = SGarbageCollectionMgr::GetInstance();
+	GarbageCollectionMgr->AddGcObject(obj);
+	return obj;
+}

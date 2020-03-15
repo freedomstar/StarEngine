@@ -2,10 +2,8 @@
 
 SMath::SMath()
 {
-
 }
 
 SMath::~SMath()
 {
-
 }

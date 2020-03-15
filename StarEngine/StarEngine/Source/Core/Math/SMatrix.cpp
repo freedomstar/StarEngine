@@ -1,4 +1,5 @@
 #include "SMatrix.h"
+#include "Core/SObject/SObject.h"
 
 SMatrix::SMatrix()
 {

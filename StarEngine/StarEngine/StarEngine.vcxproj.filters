@@ -107,6 +107,9 @@
     <ClCompile Include="Source\Core\Math\SVector.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Runtime\GC\SGarbageCollectionMgr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ThirdParty\imgui\imconfig.h">
@@ -176,6 +179,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Math\SVector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\GC\SGarbageCollectionMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

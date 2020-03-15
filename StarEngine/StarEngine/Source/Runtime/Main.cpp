@@ -1,29 +1,68 @@
-#include "windows.h"
+//#include "windows.h"
 #include <iostream>
 #include <boost/thread/thread.hpp>
 #include "boost/array.hpp"
 #include "Define.h"
 #include "../Core/Math/SMath.h"
+#include "Core/Math/SMatrix.h"
+#include "Core/SObject/SObject.h"
+#include "Runtime/GC/SGarbageCollectionMgr.h"
 //typedef signed int int32;
 
-int main()
+class Test :public SObject
 {
-	float fa[] = { 1,2,
-				   1,-1 };
-	SMatrix a = SMatrix(2, 2, fa);
-	float fb[] = { 1,2,-3,
-				   -1,1,2 };
-	SMatrix b = SMatrix(2, 3, fb);
+public:
+	Test();
+	~Test();
+	SObject* m;
+	Test* t;
+};
 
-	SMatrix c = a * b;
+Test::Test()
+{
+	AddGCRef(&m);
+	AddGCRef(&t);
+}
 
-	for (int32 i = 0; i < b.Row; i++)
+Test::~Test()
+{
+}
+
+int main(void) {
+	SGarbageCollectionMgr* mgr = SGarbageCollectionMgr::GetInstance();
+	Test* testlist[3];
+	int32 index = 0;
+	for (int32 i = 0; i < 3; i++)
 	{
-		for (int32 j = 0; j < b.Column; j++)
-		{
-			std::cout << b.Matrix[i][j] << " ";
-		}
-		std::cout << std::endl;
+		testlist[i] = NewSObject<Test>();
+		testlist[i]->AddToRoot();
+		printf("Create No. %d obj \n", index);
+		testlist[i]->index = index++;
+		testlist[i]->t = NewSObject<Test>();
+		printf("Create No. %d obj \n", index);
+		testlist[i]->t->index = index++;
+		testlist[i]->m = NewSObject<SObject>();
+		printf("Create No. %d obj \n", index);
+		testlist[i]->m->index = index++;
+		testlist[i]->t->t = NewSObject<Test>();
+		printf("Create No. %d obj \n", index);
+		testlist[i]->t->t->index = index++;
+		testlist[i]->t->t->t = NewSObject<Test>();
+		printf("Create No. %d obj \n", index);
+		testlist[i]->t->t->t->index = index++;
+		testlist[i]->t->m = NewSObject<SObject>();
+		printf("Create No. %d obj \n", index);
+		testlist[i]->t->m->index = index++;
+		//testlist[i]->PrintChildObject();
+	}
+	boost::asio::io_service* io_service = new boost::asio::io_service();
+	testlist[1]->Destroy();
+	mgr->Start(io_service);
+	boost::thread td(boost::bind(&boost::asio::io_service::run, io_service));
+	while (true)
+	{
+		Sleep(1000);
+		std::cout << "Main Thread" << std::endl;
 	}
 	return 0;
 }

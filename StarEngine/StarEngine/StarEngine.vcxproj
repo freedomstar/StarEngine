@@ -110,7 +110,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)Source\ThirdParty\imgui;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -174,6 +174,7 @@
     <ClCompile Include="Source\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Runtime\GC\SGarbageCollectionMgr.cpp" />
     <ClCompile Include="Source\Runtime\Main.cpp" />
     <ClCompile Include="Source\Runtime\SBaseWindow\SBaseWindow.cpp" />
     <ClCompile Include="Source\Runtime\SBaseWindow\SBaseWindowMgr.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Source\Define\Define.h" />
     <ClInclude Include="Source\Core\SObject\SObject.h" />
     <ClInclude Include="Source\pch.h" />
+    <ClInclude Include="Source\Runtime\GC\SGarbageCollectionMgr.h" />
     <ClInclude Include="Source\Runtime\SBaseWindow\SBaseWindow.h" />
     <ClInclude Include="Source\Runtime\SBaseWindow\SBaseWindowMgr.h" />
     <ClInclude Include="Source\Runtime\SWindow\SWindow.h" />

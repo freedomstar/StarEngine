@@ -1,7 +1,9 @@
 #pragma once
 #include "Define.h"
-#include <iostream>
 #include "Core/SObject/SObject.h"
+#include <iostream>
+
+class SObject;
 
 class SMatrix :public SObject
 {
