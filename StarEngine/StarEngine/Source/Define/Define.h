@@ -21,6 +21,17 @@ typedef uint16				CHAR16;		// A 16-bit character type - In-memory only.  16-bit 
 typedef uint32				CHAR32;		// A 32-bit character type - In-memory only.  32-bit representation.  Should really be char32_t but making this the generic option is easier for compilers which don't fully support C++11 yet (i.e. MSVC).
 typedef WIDECHAR			TCHAR;		// A switchable character  - In-memory only.  Either ANSICHAR or WIDECHAR, depending on a licensee's requirements.
 
+#define BODY_MACRO_COMBINE_INNER(A,B) A##B
+#define BODY_MACRO_COMBINE(A,B) BODY_MACRO_COMBINE_INNER(A,B)
+
+#define STAR_DEFINE_CODE(...) BODY_MACRO_COMBINE(CURFILENAMEID,__LINE__)
+
+#define SCLASS(...)
+
+#define SPROPERTY(...)
+
+#define SFUNCTION(...)
+
 template <class T>
 inline T* NewSObject()
 {
@@ -31,6 +42,7 @@ inline T* NewSObject()
 		delete obj;
 		return nullptr;
 	}
+	sobj->ConfigGCRef();
 	SGarbageCollectionMgr* GarbageCollectionMgr = SGarbageCollectionMgr::GetInstance();
 	GarbageCollectionMgr->AddGcObject(obj);
 	return obj;

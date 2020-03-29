@@ -11,6 +11,7 @@ SObject::~SObject()
 
 void SObject::AddGCRef(void* child)
 {
+	//childObjRefList.Con
 	childObjRefList.push_back(child);
 }
 

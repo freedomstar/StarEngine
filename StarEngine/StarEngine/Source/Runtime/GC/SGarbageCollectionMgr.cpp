@@ -46,14 +46,6 @@ void SGarbageCollectionMgr::ClearGarbageCollection()
 	std::cout << "\n--------------Start Clear Garbage Collection-------------" << std::endl;
 	_mutex.lock();
 	std::list<SObject*>::iterator iter;
-	for (iter = SObjectList.begin(); iter != SObjectList.end(); iter++)
-	{
-		SObject* obj = *iter;
-		if (obj)
-		{
-			obj->GCArrive = false;
-		}
-	}
 	for (iter = RootObjects.begin(); iter != RootObjects.end();)
 	{
 		if ((*iter)->ObjectGCFlag != PendingKill)
@@ -82,6 +74,7 @@ void SGarbageCollectionMgr::ClearGarbageCollection()
 		}
 		else
 		{
+			(*iter)->GCArrive = false;
 			iter++;
 		}
 	}

@@ -7,62 +7,25 @@
 #include "Core/Math/SMatrix.h"
 #include "Core/SObject/SObject.h"
 #include "Runtime/GC/SGarbageCollectionMgr.h"
+#include <stdarg.h>
+#include "Core/TestRefClass.h"
 //typedef signed int int32;
 
-class Test :public SObject
+int main(void)
 {
-public:
-	Test();
-	~Test();
-	SObject* m;
-	Test* t;
-};
-
-Test::Test()
-{
-	AddGCRef(&m);
-	AddGCRef(&t);
-}
-
-Test::~Test()
-{
-}
-
-int main(void) {
 	SGarbageCollectionMgr* mgr = SGarbageCollectionMgr::GetInstance();
-	Test* testlist[3];
-	int32 index = 0;
-	for (int32 i = 0; i < 3; i++)
-	{
-		testlist[i] = NewSObject<Test>();
-		testlist[i]->AddToRoot();
-		printf("Create No. %d obj \n", index);
-		testlist[i]->index = index++;
-		testlist[i]->t = NewSObject<Test>();
-		printf("Create No. %d obj \n", index);
-		testlist[i]->t->index = index++;
-		testlist[i]->m = NewSObject<SObject>();
-		printf("Create No. %d obj \n", index);
-		testlist[i]->m->index = index++;
-		testlist[i]->t->t = NewSObject<Test>();
-		printf("Create No. %d obj \n", index);
-		testlist[i]->t->t->index = index++;
-		testlist[i]->t->t->t = NewSObject<Test>();
-		printf("Create No. %d obj \n", index);
-		testlist[i]->t->t->t->index = index++;
-		testlist[i]->t->m = NewSObject<SObject>();
-		printf("Create No. %d obj \n", index);
-		testlist[i]->t->m->index = index++;
-		//testlist[i]->PrintChildObject();
-	}
+	TestRefClass* test = NewSObject<TestRefClass>();
+	(test->*(test->funRefMap["TestRefFun"].fun))(test, "string²ÎÊý²âÊÔ");
+	test->index = 0;
+	test->TestObj = NewSObject<SObject>();
+	test->index = 1;
 	boost::asio::io_service* io_service = new boost::asio::io_service();
-	testlist[1]->Destroy();
+	test->Destroy();
 	mgr->Start(io_service);
 	boost::thread td(boost::bind(&boost::asio::io_service::run, io_service));
 	while (true)
 	{
 		Sleep(1000);
-		std::cout << "Main Thread" << std::endl;
 	}
 	return 0;
 }

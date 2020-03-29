@@ -112,7 +112,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\ThirdParty\imgui;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)StarRefCode;$(ProjectDir)Source\ThirdParty\imgui;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -171,6 +171,7 @@
     <ClCompile Include="Source\Core\Math\SMatrix.cpp" />
     <ClCompile Include="Source\Core\Math\SVector.cpp" />
     <ClCompile Include="Source\Core\SObject\SObject.cpp" />
+    <ClCompile Include="Source\Core\TestRefClass.cpp" />
     <ClCompile Include="Source\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -196,6 +197,7 @@
     <ClInclude Include="Source\Core\Math\SMath.h" />
     <ClInclude Include="Source\Core\Math\SMatrix.h" />
     <ClInclude Include="Source\Core\Math\SVector.h" />
+    <ClInclude Include="Source\Core\TestRefClass.h" />
     <ClInclude Include="Source\Define\Define.h" />
     <ClInclude Include="Source\Core\SObject\SObject.h" />
     <ClInclude Include="Source\pch.h" />
