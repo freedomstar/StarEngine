@@ -370,6 +370,9 @@ def writeConfigCode(className, lineNum, pointPropertyDic, fileName, Fpath):
 
 
 refcodeMetaData = {}
+if not os.path.exists(os.getcwd()+"\\RefCodeData"):
+    refcodeData = open(os.getcwd()+"\\RefCodeData", "w")
+    refcodeData.close()
 if os.path.getsize(os.getcwd()+"\\RefCodeData") > 0:
     refcodeData = open(os.getcwd()+"\\RefCodeData", "rb+")
     refcodeMetaData = pickle.load(refcodeData)
