@@ -77,8 +77,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)ThirdParty\boost_1_72_0;$(ProjectDir)ThirdParty\include;$(ProjectDir)Source\Define;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)ThirdParty\lib\win64;$(ProjectDir)ThirdParty\boost_1_72_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)ThirdParty\include;$(ProjectDir)Source\Define;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)ThirdParty\lib\win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -171,15 +171,17 @@
     <ClCompile Include="Source\Core\Math\SMatrix.cpp" />
     <ClCompile Include="Source\Core\Math\SVector.cpp" />
     <ClCompile Include="Source\Core\SObject\SObject.cpp" />
+    <ClCompile Include="Source\Core\StarEngine\StarEngine.cpp" />
     <ClCompile Include="Source\Core\TestRefClass.cpp" />
     <ClCompile Include="Source\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Render\SRender.cpp" />
     <ClCompile Include="Source\Runtime\GC\SGarbageCollectionMgr.cpp" />
     <ClCompile Include="Source\Runtime\Main.cpp" />
     <ClCompile Include="Source\Runtime\SBaseWindow\SBaseWindow.cpp" />
     <ClCompile Include="Source\Runtime\SBaseWindow\SBaseWindowMgr.cpp" />
-    <ClCompile Include="Source\Runtime\SWindow\SWindow.cpp" />
+    <ClCompile Include="Source\Runtime\Editor\SWindow\SWindow.cpp" />
     <ClCompile Include="Source\ThirdParty\glad\glad.c" />
     <ClCompile Include="Source\ThirdParty\imgui\imgui.cpp" />
     <ClCompile Include="Source\ThirdParty\imgui\imgui_demo.cpp" />
@@ -197,14 +199,16 @@
     <ClInclude Include="Source\Core\Math\SMath.h" />
     <ClInclude Include="Source\Core\Math\SMatrix.h" />
     <ClInclude Include="Source\Core\Math\SVector.h" />
+    <ClInclude Include="Source\Core\StarEngine\StarEngine.h" />
     <ClInclude Include="Source\Core\TestRefClass.h" />
     <ClInclude Include="Source\Define\Define.h" />
     <ClInclude Include="Source\Core\SObject\SObject.h" />
     <ClInclude Include="Source\pch.h" />
+    <ClInclude Include="Source\Render\SRender.h" />
     <ClInclude Include="Source\Runtime\GC\SGarbageCollectionMgr.h" />
     <ClInclude Include="Source\Runtime\SBaseWindow\SBaseWindow.h" />
     <ClInclude Include="Source\Runtime\SBaseWindow\SBaseWindowMgr.h" />
-    <ClInclude Include="Source\Runtime\SWindow\SWindow.h" />
+    <ClInclude Include="Source\Runtime\Editor\SWindow\SWindow.h" />
     <ClInclude Include="Source\ThirdParty\imgui\imconfig.h" />
     <ClInclude Include="Source\ThirdParty\imgui\imgui.h" />
     <ClInclude Include="Source\ThirdParty\imgui\imgui_impl_dx10.h" />
@@ -219,6 +223,7 @@
     <ClInclude Include="Source\ThirdParty\imgui\imstb_rectpack.h" />
     <ClInclude Include="Source\ThirdParty\imgui\imstb_textedit.h" />
     <ClInclude Include="Source\ThirdParty\imgui\imstb_truetype.h" />
+    <ClInclude Include="StarRefCode\TestRefClassStarCode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

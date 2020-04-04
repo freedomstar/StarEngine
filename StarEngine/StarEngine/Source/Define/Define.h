@@ -1,5 +1,11 @@
 #pragma once
 //#include "Core/SObject/SObject.h"
+#include <map>
+#include <stdarg.h>
+#include <windows.h>
+#include <thread>
+#include <chrono>
+#include <list>
 
 // Unsigned base types.
 typedef unsigned char 		uint8;		// 8-bit  unsigned.

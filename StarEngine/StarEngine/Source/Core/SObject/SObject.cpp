@@ -64,3 +64,7 @@ void SObject::PrintChildObject()
 		}
 	}
 }
+
+void SObject::Tick(float DeltaTime)
+{
+}

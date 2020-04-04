@@ -1,9 +1,11 @@
 #include "SGarbageCollectionMgr.h"
-#include <boost/thread.hpp>
 #include "Core/SObject/SObject.h"
 #include "stdio.h"
+#include <chrono>
 
 #define GARBAGE_COLLECTIONMGR_TIMER_INTERVAL 5
+
+SGarbageCollectionMgr* SGarbageCollectionMgr::_Instance = nullptr;
 
 SGarbageCollectionMgr::SGarbageCollectionMgr()
 {
@@ -11,26 +13,17 @@ SGarbageCollectionMgr::SGarbageCollectionMgr()
 
 SGarbageCollectionMgr::~SGarbageCollectionMgr()
 {
-	delete io_service;
-	delete timer;
 }
 
-void SGarbageCollectionMgr::Tick()
-{
-	ClearGarbageCollection();
-	static boost::posix_time::seconds interval(GARBAGE_COLLECTIONMGR_TIMER_INTERVAL);
-	timer->expires_at(timer->expires_at() + interval);
-	timer->async_wait(boost::bind(&SGarbageCollectionMgr::Tick, this));
-}
-
-void SGarbageCollectionMgr::Start(boost::asio::io_service* io_service)
+void SGarbageCollectionMgr::Start()
 {
 	printf("\nStart GC,Interval %d second \n", GARBAGE_COLLECTIONMGR_TIMER_INTERVAL);
-	timer = new boost::asio::deadline_timer(*io_service, boost::posix_time::seconds(GARBAGE_COLLECTIONMGR_TIMER_INTERVAL));
-	timer->async_wait(boost::bind(&SGarbageCollectionMgr::Tick, this));
+	while (true)
+	{
+		std::this_thread::sleep_for(std::chrono::seconds(GARBAGE_COLLECTIONMGR_TIMER_INTERVAL));
+		ClearGarbageCollection();
+	}
 }
-
-SGarbageCollectionMgr* SGarbageCollectionMgr::_Instance = nullptr;
 
 SGarbageCollectionMgr* SGarbageCollectionMgr::GetInstance()
 {
@@ -44,7 +37,13 @@ SGarbageCollectionMgr* SGarbageCollectionMgr::GetInstance()
 void SGarbageCollectionMgr::ClearGarbageCollection()
 {
 	std::cout << "\n--------------Start Clear Garbage Collection-------------" << std::endl;
-	_mutex.lock();
+	bool block = _mutex.try_lock();
+	if (!block)
+	{
+		std::cout << "\n--------------Garbage Collection Mutex.try_lock failed-------------" << std::endl;
+		std::cout << "--------------End Clear Garbage Collection-------------" << std::endl;
+		return;
+	}
 	std::list<SObject*>::iterator iter;
 	for (iter = RootObjects.begin(); iter != RootObjects.end();)
 	{
@@ -112,5 +111,18 @@ void SGarbageCollectionMgr::AddToRoot(SObject* obj)
 	if (obj)
 	{
 		RootObjects.push_back(obj);
+	}
+}
+
+void SGarbageCollectionMgr::DispatchSObjectTick(float DeltaTime)
+{
+	static std::list<SObject*>::iterator iter;
+	for (iter = SObjectList.begin(); iter != SObjectList.end();)
+	{
+		if ((*iter)->bTick)
+		{
+			(*iter)->Tick(DeltaTime);
+			iter++;
+		}
 	}
 }

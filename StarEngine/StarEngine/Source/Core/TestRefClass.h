@@ -5,7 +5,7 @@
 
 SCLASS()
 class TestRefClass :public SObject
-{
+{  
 	STAR_DEFINE_CODE();
 
 public:

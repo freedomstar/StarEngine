@@ -86,9 +86,6 @@
     <ClCompile Include="Source\Core\SObject\SObject.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\SWindow\SWindow.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Runtime\SBaseWindow\SBaseWindow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -111,6 +108,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\TestRefClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\StarEngine\StarEngine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Editor\SWindow\SWindow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Render\SRender.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -160,9 +166,6 @@
     <ClInclude Include="Source\Core\SObject\SObject.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\SWindow\SWindow.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Runtime\SBaseWindow\SBaseWindow.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -188,6 +191,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\TestRefClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StarRefCode\TestRefClassStarCode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\StarEngine\StarEngine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Editor\SWindow\SWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Render\SRender.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
