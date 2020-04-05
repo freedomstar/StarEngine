@@ -3,8 +3,6 @@
 #include "stdio.h"
 #include <chrono>
 
-#define GARBAGE_COLLECTIONMGR_TIMER_INTERVAL 5
-
 SGarbageCollectionMgr* SGarbageCollectionMgr::_Instance = nullptr;
 
 SGarbageCollectionMgr::SGarbageCollectionMgr()
@@ -119,7 +117,7 @@ void SGarbageCollectionMgr::DispatchSObjectTick(float DeltaTime)
 	static std::list<SObject*>::iterator iter;
 	for (iter = SObjectList.begin(); iter != SObjectList.end();)
 	{
-		if ((*iter)->bTick)
+		if ((*iter)->bTick && (*iter)->ObjectGCFlag != PendingKill)
 		{
 			(*iter)->Tick(DeltaTime);
 			iter++;

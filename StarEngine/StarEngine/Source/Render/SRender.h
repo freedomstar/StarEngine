@@ -1,4 +1,5 @@
 #pragma once
+#include "Define/Define.h"
 
 class SRender
 {

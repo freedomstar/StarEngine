@@ -12,20 +12,25 @@ StarEngine::~StarEngine()
 void StarEngine::Run()
 {
 	Init();
-
-	static std::chrono::microseconds DeltaTime;
-	while (true)
+	double DeltaTime = 0;
+	while (!bShutDown)
 	{
-		static auto StartTime = std::chrono::system_clock::now();
-		DispatchTick(float(DeltaTime.count()) / 1000000);
+		if (!BaseWindow || BaseWindow->IsColse())
+		{
+			break;
+		}
+		auto StartTime = std::chrono::steady_clock::now();
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		static auto EndTime = std::chrono::system_clock::now();
-		DeltaTime = std::chrono::duration_cast<std::chrono::microseconds>(EndTime - StartTime);
+		DispatchTick(DeltaTime);
+		auto EndTime = std::chrono::steady_clock::now();
+		std::chrono::milliseconds DeltaTimeMilli = std::chrono::duration_cast<std::chrono::milliseconds> (EndTime - StartTime);
+		DeltaTime = DeltaTimeMilli.count() / 1000.f;
 	}
 }
 
 void StarEngine::ShutDown()
 {
+	bShutDown = true;
 }
 
 void StarEngine::Init()
@@ -37,6 +42,9 @@ void StarEngine::Init()
 	Render.Init();
 	std::thread RenderThread(&SRender::Run, Render);
 	RenderThread.detach();
+
+	BaseWindow = NewSObject<SBaseWindow>();
+	BaseWindow->CreateBaseWindow("StarEngine");
 }
 
 void StarEngine::DispatchTick(float DeltaTime)

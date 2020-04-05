@@ -1,11 +1,14 @@
 #pragma once
 //#include "Core/SObject/SObject.h"
+#include <glad/glad.h>
 #include <map>
 #include <stdarg.h>
 #include <windows.h>
 #include <thread>
 #include <chrono>
 #include <list>
+#include <iostream>
+#include <functional>
 
 // Unsigned base types.
 typedef unsigned char 		uint8;		// 8-bit  unsigned.
@@ -39,7 +42,7 @@ typedef WIDECHAR			TCHAR;		// A switchable character  - In-memory only.  Either 
 #define SFUNCTION(...)
 
 template <class T>
-inline T* NewSObject()
+static inline T* NewSObject()
 {
 	T* obj = new T();
 	SObject* sobj = dynamic_cast<SObject*>(obj);

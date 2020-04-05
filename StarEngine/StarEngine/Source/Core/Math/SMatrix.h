@@ -3,19 +3,24 @@
 #include "Core/SObject/SObject.h"
 #include <iostream>
 
+//TODO::Use SIMD
 class SObject;
 
-class SMatrix :public SObject
+class SMatrix
 {
 public:
 	SMatrix();
 	SMatrix(int32 Row, int32 Column);
 	SMatrix(int32 Row, int32 Column, float data[]);
-	SMatrix(const SMatrix& sMatrix);
-	~SMatrix();
+	SMatrix(int32 Row, int32 Column, float data[], bool MateData);
+	SMatrix(float data[]);
+	virtual ~SMatrix();
 	int32 Row = 0;
 	int32 Column = 0;
-	float** Matrix;
+	float Matrix[4][4] = { {0,0,0,0},
+						   {0,0,0,0},
+						   {0,0,0,0},
+						   {0,0,0,0} };
 
 	SMatrix operator *(const SMatrix& sMatrix)
 	{
@@ -23,19 +28,22 @@ public:
 		{
 			int32 newRow = this->Row;
 			int32 newColumn = sMatrix.Column;
-			float* data = new float[newRow * newColumn];
-			for (int32 i = 1; i <= newRow; i++)
+			static float data[] = { 0,0,0,0,
+							0,0,0,0,
+							0,0,0,0,
+							0,0,0,0 };
+			for (int32 i = 0; i < 4; i++)
 			{
-				for (int32 j = 1; j <= newColumn; j++)
+				for (int32 j = 0; j < 4; j++)
 				{
-					data[newColumn * (i - 1) + (j - 1)] = 0.f;
-					for (int32 k = 0; k < this->Column; k++)
+					data[4 * i + j] = 0;
+					for (int32 k = 0; k < 4; k++)
 					{
-						data[newColumn * (i - 1) + (j - 1)] += this->Matrix[i - 1][k] * sMatrix.Matrix[k][j - 1];
+						data[4 * i + j] += this->Matrix[i][k] * sMatrix.Matrix[k][j];
 					}
 				}
 			}
-			return SMatrix(newRow, newColumn, data);
+			return SMatrix(newRow, newColumn, data, true);
 		}
 		else
 		{

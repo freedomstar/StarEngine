@@ -5,12 +5,12 @@
 
 SCLASS()
 class TestRefClass :public SObject
-{  
+{
 	STAR_DEFINE_CODE();
 
 public:
 	TestRefClass();
-	~TestRefClass();
+	virtual ~TestRefClass();
 
 	SPROPERTY()
 		SObject* TestObj;

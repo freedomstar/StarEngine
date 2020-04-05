@@ -12,7 +12,7 @@ class SVector2 :SVector
 {
 public:
 	SVector2(float x, float y);
-	~SVector2();
+	virtual ~SVector2();
 
 	float x = 0, y = 0;
 

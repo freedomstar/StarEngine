@@ -16,7 +16,7 @@ class SObject
 {
 public:
 	SObject();
-	~SObject();
+	virtual ~SObject();
 	GCFlag ObjectGCFlag = GCFlag::Auto;
 	void AddToRoot();
 	std::list<void*> childObjRefList;

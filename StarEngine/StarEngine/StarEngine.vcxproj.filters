@@ -205,5 +205,11 @@
     <ClInclude Include="Source\Render\SRender.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ThirdParty\include\glad\glad.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\include\KHR\khrplatform.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

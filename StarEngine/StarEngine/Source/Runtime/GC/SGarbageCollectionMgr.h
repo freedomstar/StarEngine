@@ -4,6 +4,8 @@
 #include <mutex>
 //#include "Core/SObject/SObject.h"
 
+#define GARBAGE_COLLECTIONMGR_TIMER_INTERVAL 60
+
 enum GCFlag
 {
 	AtRoot,
@@ -18,7 +20,7 @@ class SGarbageCollectionMgr
 {
 public:
 	SGarbageCollectionMgr();
-	~SGarbageCollectionMgr();
+	virtual ~SGarbageCollectionMgr();
 	static SGarbageCollectionMgr* GetInstance();
 	void AddGcObject(SObject* obj);
 	void Start();
