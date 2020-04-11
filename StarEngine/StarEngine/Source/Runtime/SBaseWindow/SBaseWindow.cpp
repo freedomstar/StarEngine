@@ -2,6 +2,7 @@
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_glfw.h"
+#include "Runtime/SBaseWindow/SBaseWindowMgr.h"
 
 SBaseWindow::SBaseWindow()
 {
@@ -15,6 +16,7 @@ SBaseWindow::~SBaseWindow()
 	glfwTerminate();
 	glfwDestroyWindow(glfwWindow);
 	delete glfwWindow;
+	delete mainEditorWindow;
 }
 
 bool SBaseWindow::CreateBaseWindow(char* WindowName, int32 Width, int32 Height)
@@ -27,9 +29,6 @@ bool SBaseWindow::CreateBaseWindow(char* WindowName, int32 Width, int32 Height)
 	}
 	return false;
 }
-
-static int32 ScreenWidth;
-static int32 ScreenHeight;
 
 bool SBaseWindow::CreateBaseWindow(char* WindowName)
 {
@@ -47,8 +46,8 @@ bool SBaseWindow::CreateBaseWindow(char* WindowName)
 	}
 	if (CreateGlfwWindow(WindowName, mode->width, mode->height))
 	{
-		ScreenWidth = mode->width;
-		ScreenHeight = mode->height;
+		//SBaseWindowMgr::ScreenWidth = mode->width;
+		//SBaseWindowMgr::ScreenHeight = mode->height;
 		this->AddToRoot();
 		return true;
 	}
@@ -70,6 +69,7 @@ bool SBaseWindow::CreateGlfwWindow(char* WindowName, int32 Width, int32 Height)
 		return false;
 	}
 	ImguiInit();
+	return true;
 }
 
 void SBaseWindow::Tick(float DeltaTime)
@@ -100,52 +100,10 @@ void SBaseWindow::GlfwTick(float DeltaTime)
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-	int32 width, height;
-	glfwGetFramebufferSize(glfwWindow, &width, &height);
-	ImGui::Begin("Splitter test", 0, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
-	ImGui::SetWindowSize(ImVec2(width, height));
-	ImGui::SetWindowPos(ImVec2(0, 0));
-	ImGui::BeginMenuBar();
-	ImGui::MenuItem("File");
-	ImGui::MenuItem("Tool");
-	ImGui::MenuItem("Setting");
-	ImGui::EndMenuBar();
-	ImGui::BeginChild("child1", ImVec2(width, 50), true);
-	ImGui::SetWindowPos(ImVec2(0, 0));
-	ImGui::EndChild();
-	ImGui::BeginGroup();
-	static float w = 200.0f;
-	static float h = 300.0f;
-	static float rw = 300.0f;
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-	ImGui::BeginChild("childo1", ImVec2(w, h), true);
-	ImGui::EndChild();
-	ImGui::SameLine();
-	ImGui::InvisibleButton("vsplitter", ImVec2(8.0f, h));
-	if (ImGui::IsItemActive()) {
-		w += ImGui::GetIO().MouseDelta.x;
-		rw -= ImGui::GetIO().MouseDelta.x;
+	if (mainEditorWindow)
+	{
+		mainEditorWindow->Draw();
 	}
-	ImGui::SameLine();
-	ImGui::BeginChild("child2", ImVec2(rw, h), true);
-	ImGui::EndChild();
-	ImGui::SameLine();
-	ImGui::InvisibleButton("vsplittesr", ImVec2(8.0f, h));
-	if (ImGui::IsItemActive())
-		rw += ImGui::GetIO().MouseDelta.x;
-	ImGui::SameLine();
-	ImGui::BeginChild("childf2", ImVec2(0, h), true);
-	ImGui::EndChild();
-	ImGui::InvisibleButton("hsplitter", ImVec2(-1, 8.0f));
-	if (ImGui::IsItemActive())
-		h += ImGui::GetIO().MouseDelta.y;
-	ImGui::BeginChild("child3", ImVec2(0, 0), true);
-	ImGui::EndChild();
-	ImGui::PopStyleVar();
-	ImGui::EndGroup();
-
-	ImGui::End();
-
 	ImGui::Render();
 
 	int display_w, display_h;
@@ -164,6 +122,30 @@ void SBaseWindow::ImguiInit()
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
 	ImGui_ImplOpenGL3_Init("#version 330 core");
+	mainEditorWindow = new MainEditorWindow();
+	if (mainEditorWindow)
+	{
+		glfwGetFramebufferSize(glfwWindow, &WindowWidth, &WindowHeight);
+		mainEditorWindow->width = WindowWidth;
+		mainEditorWindow->height = WindowHeight;
+		mainEditorWindow->SetWindowName("StarEngineMainEditorWindow");
+		mainEditorWindow->bRoot = true;
+		SLayoutWindow* LayoutWindow2 = new SLayoutWindow();
+		SLayoutWindow* LayoutWindow3 = new SLayoutWindow();
+		SLayoutWindow* LayoutWindow4 = new SLayoutWindow();
+		SLayoutWindow* LayoutWindow5 = new SLayoutWindow();
+		SLayoutWindow* LayoutWindow6 = new SLayoutWindow();
+		SLayoutWindow* LayoutWindow7 = new SLayoutWindow();
+		SLayoutWindow* LayoutWindow8 = new SLayoutWindow();
+
+		mainEditorWindow->AddLayoutWindow(LayoutWindow2, 0, 0, true, true, true);
+		mainEditorWindow->AddLayoutWindow(LayoutWindow3, 0, 0, false, false, true);
+		mainEditorWindow->AddLayoutWindow(LayoutWindow4, 0, 0, true, true, false);
+		mainEditorWindow->AddLayoutWindow(LayoutWindow5, 0, 1, true, false, true);
+		mainEditorWindow->AddLayoutWindow(LayoutWindow6, 1, 0, false, true, true);
+		mainEditorWindow->AddLayoutWindow(LayoutWindow7, 2, 0, true, true, false);
+		mainEditorWindow->MoveLayoutWindow(LayoutWindow7, LayoutWindow5->Row, LayoutWindow5->Column, false, true, false);
+	}
 }
 
 void SBaseWindow::ProcessInput()

@@ -4,6 +4,7 @@
 #include "Render/SRender.h"
 #include "../Runtime/GC/SGarbageCollectionMgr.h"
 #include "Runtime/SBaseWindow/SBaseWindow.h"
+#include <time.h>
 
 class StarEngine
 {

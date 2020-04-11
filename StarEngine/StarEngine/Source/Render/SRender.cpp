@@ -1,5 +1,6 @@
 #include "SRender.h"
 #include <GLFW/glfw3.h>
+#include "Runtime/SBaseWindow/SBaseWindowMgr.h"
 
 SRender::SRender()
 {

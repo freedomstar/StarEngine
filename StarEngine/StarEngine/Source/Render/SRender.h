@@ -5,7 +5,7 @@ class SRender
 {
 public:
 	SRender();
-	~SRender();
+	virtual ~SRender();
 	void Init();
 	void Run();
 

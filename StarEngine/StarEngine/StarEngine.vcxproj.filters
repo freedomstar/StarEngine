@@ -113,10 +113,19 @@
     <ClCompile Include="Source\Core\StarEngine\StarEngine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\Editor\SWindow\SWindow.cpp">
+    <ClCompile Include="Source\Render\SRender.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Render\SRender.cpp">
+    <ClCompile Include="Source\Editor\SWindow\MainEditorWindow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\SWindow\SLayoutWindow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\SWindow\SWidget.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\SWindow\SWindow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -199,9 +208,6 @@
     <ClInclude Include="Source\Core\StarEngine\StarEngine.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\Editor\SWindow\SWindow.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Render\SRender.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -209,6 +215,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\include\KHR\khrplatform.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\SWindow\MainEditorWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\SWindow\SLayoutWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\SWindow\SWidget.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\SWindow\SWindow.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

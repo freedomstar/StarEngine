@@ -1,6 +1,5 @@
 #pragma once
 //#include "Core/SObject/SObject.h"
-#include <glad/glad.h>
 #include <map>
 #include <stdarg.h>
 #include <windows.h>
@@ -8,6 +7,7 @@
 #include <chrono>
 #include <list>
 #include <iostream>
+#include <algorithm>
 #include <functional>
 
 // Unsigned base types.
@@ -40,6 +40,10 @@ typedef WIDECHAR			TCHAR;		// A switchable character  - In-memory only.  Either 
 #define SPROPERTY(...)
 
 #define SFUNCTION(...)
+
+#define MAX_HORIZONTAL_LAYOUT_COUNT 20
+
+#define MAX_VERTICAL_LAYOUT_COUNT 20
 
 template <class T>
 static inline T* NewSObject()

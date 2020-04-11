@@ -177,11 +177,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Render\SRender.cpp" />
+    <ClCompile Include="Source\Editor\SWindow\SLayoutWindow.cpp" />
+    <ClCompile Include="Source\Editor\SWindow\MainEditorWindow.cpp" />
+    <ClCompile Include="Source\Editor\SWindow\SWidget.cpp" />
     <ClCompile Include="Source\Runtime\GC\SGarbageCollectionMgr.cpp" />
     <ClCompile Include="Source\Runtime\Main.cpp" />
     <ClCompile Include="Source\Runtime\SBaseWindow\SBaseWindow.cpp" />
     <ClCompile Include="Source\Runtime\SBaseWindow\SBaseWindowMgr.cpp" />
-    <ClCompile Include="Source\Runtime\Editor\SWindow\SWindow.cpp" />
+    <ClCompile Include="Source\Editor\SWindow\SWindow.cpp" />
     <ClCompile Include="Source\ThirdParty\glad\glad.c" />
     <ClCompile Include="Source\ThirdParty\imgui\imgui.cpp" />
     <ClCompile Include="Source\ThirdParty\imgui\imgui_demo.cpp" />
@@ -205,10 +208,13 @@
     <ClInclude Include="Source\Core\SObject\SObject.h" />
     <ClInclude Include="Source\pch.h" />
     <ClInclude Include="Source\Render\SRender.h" />
+    <ClInclude Include="Source\Editor\SWindow\SLayoutWindow.h" />
+    <ClInclude Include="Source\Editor\SWindow\MainEditorWindow.h" />
+    <ClInclude Include="Source\Editor\SWindow\SWidget.h" />
     <ClInclude Include="Source\Runtime\GC\SGarbageCollectionMgr.h" />
     <ClInclude Include="Source\Runtime\SBaseWindow\SBaseWindow.h" />
     <ClInclude Include="Source\Runtime\SBaseWindow\SBaseWindowMgr.h" />
-    <ClInclude Include="Source\Runtime\Editor\SWindow\SWindow.h" />
+    <ClInclude Include="Source\Editor\SWindow\SWindow.h" />
     <ClInclude Include="Source\ThirdParty\imgui\imconfig.h" />
     <ClInclude Include="Source\ThirdParty\imgui\imgui.h" />
     <ClInclude Include="Source\ThirdParty\imgui\imgui_impl_dx10.h" />

@@ -1,6 +1,8 @@
 #pragma once
 #include "../../Core/SObject/SObject.h"
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "Editor/SWindow/MainEditorWindow.h"
 
 struct BaseWindowInputAction
 {
@@ -25,7 +27,9 @@ public:
 	bool IsColse();
 	std::list<BaseWindowInputAction> InputActionList;
 	void ImguiInit();
+	int32 WindowWidth, WindowHeight;
 private:
 	GLFWwindow* glfwWindow = nullptr;
+	MainEditorWindow* mainEditorWindow;
 	bool bClose = false;
 };
