@@ -173,6 +173,7 @@
     <ClCompile Include="Source\Core\SObject\SObject.cpp" />
     <ClCompile Include="Source\Core\StarEngine\StarEngine.cpp" />
     <ClCompile Include="Source\Core\TestRefClass.cpp" />
+    <ClCompile Include="Source\Editor\SWindow\STabItem.cpp" />
     <ClCompile Include="Source\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -206,6 +207,7 @@
     <ClInclude Include="Source\Core\TestRefClass.h" />
     <ClInclude Include="Source\Define\Define.h" />
     <ClInclude Include="Source\Core\SObject\SObject.h" />
+    <ClInclude Include="Source\Editor\SWindow\STabItem.h" />
     <ClInclude Include="Source\pch.h" />
     <ClInclude Include="Source\Render\SRender.h" />
     <ClInclude Include="Source\Editor\SWindow\SLayoutWindow.h" />

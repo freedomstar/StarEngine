@@ -95,6 +95,16 @@ void SBaseWindow::GlfwTick(float DeltaTime)
 		this->Destroy();
 		return;
 	}
+	if (mainEditorWindow && !mainEditorWindow->ChangeLayoutFunList.empty())
+	{
+		std::list<std::function<void()>>::iterator fiter;
+		for (fiter = mainEditorWindow->ChangeLayoutFunList.begin(); fiter != mainEditorWindow->ChangeLayoutFunList.end();)
+		{
+			(*fiter)();
+			fiter++;
+		}
+		mainEditorWindow->ChangeLayoutFunList.clear();
+	}
 	ProcessInput();
 	glfwPollEvents();
 	ImGui_ImplOpenGL3_NewFrame();
@@ -131,20 +141,36 @@ void SBaseWindow::ImguiInit()
 		mainEditorWindow->SetWindowName("StarEngineMainEditorWindow");
 		mainEditorWindow->bRoot = true;
 		SLayoutWindow* LayoutWindow2 = new SLayoutWindow();
+		STabItem* Item1 = new STabItem();
+		LayoutWindow2->addTab(Item1);
+
 		SLayoutWindow* LayoutWindow3 = new SLayoutWindow();
+		STabItem* Item2 = new STabItem();
+		LayoutWindow3->addTab(Item2);
+
 		SLayoutWindow* LayoutWindow4 = new SLayoutWindow();
+		STabItem* Item3 = new STabItem();
+		LayoutWindow4->addTab(Item3);
+
 		SLayoutWindow* LayoutWindow5 = new SLayoutWindow();
+		STabItem* Item4 = new STabItem();
+		LayoutWindow5->addTab(Item4);
+
 		SLayoutWindow* LayoutWindow6 = new SLayoutWindow();
+		STabItem* Item5 = new STabItem();
+		LayoutWindow6->addTab(Item5);
+
 		SLayoutWindow* LayoutWindow7 = new SLayoutWindow();
-		SLayoutWindow* LayoutWindow8 = new SLayoutWindow();
+		STabItem* Item6 = new STabItem();
+		LayoutWindow7->addTab(Item6);
 
 		mainEditorWindow->AddLayoutWindow(LayoutWindow2, 0, 0, true, true, true);
 		mainEditorWindow->AddLayoutWindow(LayoutWindow3, 0, 0, false, false, true);
-		mainEditorWindow->AddLayoutWindow(LayoutWindow4, 0, 0, true, true, false);
+		mainEditorWindow->AddLayoutWindow(LayoutWindow4, 0, 0, true, false, false);
 		mainEditorWindow->AddLayoutWindow(LayoutWindow5, 0, 1, true, false, true);
-		mainEditorWindow->AddLayoutWindow(LayoutWindow6, 1, 0, false, true, true);
-		mainEditorWindow->AddLayoutWindow(LayoutWindow7, 2, 0, true, true, false);
-		mainEditorWindow->MoveLayoutWindow(LayoutWindow7, LayoutWindow5->Row, LayoutWindow5->Column, false, true, false);
+		mainEditorWindow->AddLayoutWindow(LayoutWindow6, 0, 0, false, true, true);
+		mainEditorWindow->AddLayoutWindow(LayoutWindow7, 1, 0, true, true, false);
+		mainEditorWindow->MoveLayoutWindow(LayoutWindow7, LayoutWindow5, true, true, true);
 	}
 }
 

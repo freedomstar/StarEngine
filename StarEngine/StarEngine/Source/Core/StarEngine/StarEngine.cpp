@@ -40,12 +40,12 @@ void StarEngine::ShutDown()
 void StarEngine::Init()
 {
 	GarbageCollectionMgr = SGarbageCollectionMgr::GetInstance();
-	std::thread GCThread(&SGarbageCollectionMgr::Start, GarbageCollectionMgr);
-	GCThread.detach();
+	//std::thread GCThread(&SGarbageCollectionMgr::Start, GarbageCollectionMgr);
+	//GCThread.detach();
 
 	Render.Init();
-	std::thread RenderThread(&SRender::Run, Render);
-	RenderThread.detach();
+	//std::thread RenderThread(&SRender::Run, Render);
+	//RenderThread.detach();
 
 	BaseWindow = NewSObject<SBaseWindow>();
 	BaseWindow->CreateBaseWindow("StarEngine");

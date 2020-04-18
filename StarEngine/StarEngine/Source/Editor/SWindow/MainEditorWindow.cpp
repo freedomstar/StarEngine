@@ -4,398 +4,324 @@
 
 MainEditorWindow::MainEditorWindow()
 {
-	bRoot = true;
-	for (int32 i = 0; i < MAX_HORIZONTAL_LAYOUT_COUNT; i++)
-	{
-		HorizontalLayoutCount[i] = 0;
-	}
 }
 
 MainEditorWindow::~MainEditorWindow()
 {
 }
 
-std::list<SLayoutWindow*>* MainEditorWindow::AddLayoutRow(int32 TRow, bool bTop)
+void MainEditorWindow::RefreshRowAndColumn()
 {
-	if (VerticalLayoutCount == MAX_VERTICAL_LAYOUT_COUNT || TRow < 0 || TRow >= MAX_VERTICAL_LAYOUT_COUNT)
+	static std::list<RowListLayoutData*>::iterator iter;
+	static std::list<SLayoutWindow*>::iterator witer;
+	int32 Row = 0;
+	int32 Column = 0;
+	for (iter = Layouts.begin(); iter != Layouts.end();)
 	{
-		return nullptr;
-	}
-	std::list<SLayoutWindow*>* vlist = new std::list<SLayoutWindow*>();
-	auto iter = begin(Layouts);
-	int32 index = 0;
-	if (bTop)
-	{
-		if (TRow == 0)
+		if (*iter)
 		{
-			Layouts.push_front(vlist);
-			VerticalLayoutCount++;
-			for (int32 i = MAX_VERTICAL_LAYOUT_COUNT - 1; i >= 0; i--)
+			Column = 0;
+			for (witer = (*iter)->LayoutList.begin(); witer != (*iter)->LayoutList.end();)
 			{
-				if (i == MAX_VERTICAL_LAYOUT_COUNT - 1)
-				{
-					continue;
-				}
-				if (i == index)
-				{
-					HorizontalLayoutCount[i] = 0;
-					VerticalLayoutHeight[i] = 0;
-					break;
-				}
-				HorizontalLayoutCount[i] = HorizontalLayoutCount[i - 1];
-				VerticalLayoutHeight[i] = VerticalLayoutHeight[i - 1];
-			}
-			if (VerticalLayoutHeight[index] == 0)
-			{
-				VerticalLayoutHeight[index] = height / VerticalLayoutCount;
-			}
-			return vlist;
-		}
-		std::advance(iter, TRow);
-		index = TRow;
-	}
-	else
-	{
-		std::advance(iter, TRow + 1);
-		index = TRow + 1;
-	}
-	Layouts.insert(iter, vlist);
-	VerticalLayoutCount++;
-	for (int32 i = MAX_VERTICAL_LAYOUT_COUNT - 1; i >= 0; i--)
-	{
-		if (i == MAX_VERTICAL_LAYOUT_COUNT - 1)
-		{
-			continue;
-		}
-		if (i == index)
-		{
-			HorizontalLayoutCount[i] = 0;
-			VerticalLayoutHeight[i] = 0;
-			break;
-		}
-		HorizontalLayoutCount[i] = HorizontalLayoutCount[i - 1];
-		VerticalLayoutHeight[i] = VerticalLayoutHeight[i - 1];
-	}
-	if (index >= 0)
-	{
-		if (bTop)
-		{
-			if (index < MAX_VERTICAL_LAYOUT_COUNT - 1)
-			{
-				VerticalLayoutHeight[index] = VerticalLayoutHeight[index + 1] / 2;
-				VerticalLayoutHeight[index + 1] /= 2;
+				(*witer)->Row = Row;
+				(*witer)->Column = Column;
+				++witer;
+				Column++;
 			}
 		}
-		else
-		{
-			if (index > 0)
-			{
-				VerticalLayoutHeight[index] = VerticalLayoutHeight[index - 1] / 2;
-				VerticalLayoutHeight[index - 1] /= 2;
-			}
-		}
+		Row++;
+		iter++;
 	}
-	if (VerticalLayoutHeight[index] == 0)
-	{
-		VerticalLayoutHeight[index] = height / VerticalLayoutCount;
-	}
-
-	return vlist;
-}
-
-SLayoutWindow* MainEditorWindow::AddLayoutColumn(int32 TRow, int32 Column, bool bFront, SLayoutWindow* LayoutWindow)
-{
-	if (HorizontalLayoutCount[TRow] == MAX_VERTICAL_LAYOUT_COUNT || TRow < 0 || TRow >= MAX_HORIZONTAL_LAYOUT_COUNT)
-	{
-		return nullptr;
-	}
-	if (LayoutWindow == nullptr)
-	{
-		return nullptr;
-	}
-	//LayoutWindow->width = width / (HorizontalLayoutCount[TRow] + 1);
-	LayoutWindow->Row = TRow;
-	auto viter = begin(Layouts);
-	std::advance(viter, TRow);
-	auto hiter = begin(*(*viter));
-	if (HorizontalLayoutCount[TRow] == 0)
-	{
-		(*viter)->push_front(LayoutWindow);
-		LayoutWindow->Column = 0;
-		HorizontalLayoutCount[TRow]++;
-		LayoutWindow->width = width;
-		return LayoutWindow;
-	}
-	if (bFront)
-	{
-		if (Column == 0)
-		{
-			(*viter)->push_front(LayoutWindow);
-			LayoutWindow->Column = 0;
-			HorizontalLayoutCount[TRow]++;
-			return LayoutWindow;
-		}
-		std::advance(hiter, Column);
-		LayoutWindow->Column = Column;
-	}
-	else
-	{
-		std::advance(hiter, Column + 1);
-		LayoutWindow->Column = Column + 1;
-	}
-	(*viter)->insert(hiter, LayoutWindow);
-	HorizontalLayoutCount[TRow]++;
-
-	if (!bFront)
-	{
-		hiter--;
-		hiter--;
-	}
-
-	if ((*hiter) != nullptr)
-	{
-		LayoutWindow->width = (*hiter)->width / 2;
-		(*hiter)->width /= 2;
-	}
-	else
-	{
-		LayoutWindow->width = width;
-	}
-	return LayoutWindow;
 }
 
 bool MainEditorWindow::RemoveLayoutWindow(SLayoutWindow* LayoutWindow)
 {
-	if (LayoutWindow == nullptr)
-	{
-		return false;
-	}
-	auto viter = begin(Layouts);
-	std::advance(viter, LayoutWindow->Row);
+	static std::list<RowListLayoutData*>::iterator iter;
 	static std::list<SLayoutWindow*>::iterator witer;
-	static std::list<SLayoutWindow*>::iterator bwiter;
-	bool bFind = false;
-	int32 allWidth = 0;
-	for (witer = (*viter)->begin(); witer != (*viter)->end();)
+	iter = Layouts.begin();
+	std::advance(iter, LayoutWindow->Row);
+	if (*iter)
 	{
-		if ((*witer) == LayoutWindow)
+		(*iter)->LayoutList.remove(LayoutWindow);
+	}
+
+	if ((*iter)->LayoutList.size() <= 0)
+	{
+		int32 removeheight = (*iter)->Height;
+		Layouts.remove(*iter);
+		iter = Layouts.begin();
+		if (LayoutWindow->Row > Layouts.size())
 		{
-			bFind = true;
-			if (witer == (*viter)->end())
-			{
-				bwiter = --witer;
-				witer++;
-			}
-			if (witer == (*viter)->begin())
-			{
-				bwiter = ++witer;
-				witer--;
-			}
-			bwiter = witer;
+			iter = Layouts.end();
 		}
 		else
 		{
-			allWidth += (*witer)->width;
-		}
-		witer++;
-	}
-	if (!bFind)
-	{
-		return false;
-	}
-	(*viter)->remove(LayoutWindow);
-	HorizontalLayoutCount[LayoutWindow->Row]--;
-	for (int32 i = 0; i < MAX_VERTICAL_LAYOUT_COUNT - 1; i++)
-	{
-		if (i >= LayoutWindow->Row)
-		{
-			HorizontalLayoutCount[i] = HorizontalLayoutCount[i + 1];
-			break;
-		}
-	}
-	if (HorizontalLayoutCount[LayoutWindow->Row] != 0)
-	{
-		if (width - allWidth > 0 && (*bwiter))
-		{
-			(*bwiter)->width += width - allWidth;
-		}
-	}
-	if (LayoutWindow->Row < MAX_HORIZONTAL_LAYOUT_COUNT && HorizontalLayoutCount[LayoutWindow->Row] == 0)
-	{
-		VerticalLayoutCount--;
-		Layouts.remove(*viter);
-		//return true;
-		int32 ChangeIndex = -1;
-
-		for (int32 i = 0; i < MAX_VERTICAL_LAYOUT_COUNT - 1; i++)
-		{
-			if (i >= LayoutWindow->Row)
-			{
-				VerticalLayoutHeight[i] = VerticalLayoutHeight[i + 1];
-				if (i == LayoutWindow->Row)
-				{
-					ChangeIndex = i;
-					VerticalLayoutHeight[i] = VerticalLayoutHeight[i + 1] * 2;
-				}
-				break;
-			}
+			std::advance(iter, LayoutWindow->Row);
 		}
 
-		if (ChangeIndex >= 0)
+		if (iter == Layouts.end())
 		{
-			int32  AllHeight = 0;
-			for (int32 i = 0; i < MAX_VERTICAL_LAYOUT_COUNT - 1; i++)
-			{
-				AllHeight += VerticalLayoutHeight[i];
-			}
-			if (height - AllHeight > 0)
-			{
-				if (ChangeIndex - 1 >= 0)
-				{
-					VerticalLayoutHeight[ChangeIndex - 1] += height - AllHeight;
-				}
-				if (ChangeIndex == 0 && VerticalLayoutCount > 0)
-				{
-					VerticalLayoutHeight[ChangeIndex + 1] += height - AllHeight;
-				}
-			}
+			iter--;
 		}
-		return true;
+		(*iter)->Height += removeheight;
 	}
-	return false;
+	else
+	{
+		witer = (*iter)->LayoutList.begin();
+		if (LayoutWindow->Column > (*iter)->LayoutList.size())
+		{
+			witer == (*iter)->LayoutList.end();
+		}
+		else
+		{
+			std::advance(witer, LayoutWindow->Column);
+		}
+		if (witer == (*iter)->LayoutList.end())
+		{
+			witer--;
+		}
+		(*witer)->width += LayoutWindow->width;
+	}
+	RefreshRowAndColumn();
+	return true;
 }
 
 bool MainEditorWindow::DeleteLayoutWindow(SLayoutWindow* LayoutWindow)
 {
-	if (RemoveLayoutWindow(LayoutWindow))
-	{
-		delete LayoutWindow;
-		return true;
-	}
-	return false;
-}
-
-bool MainEditorWindow::MoveLayoutWindow(SLayoutWindow* LayoutWindow, int32 TagetRow, int32 TagetColumn, bool bFront, bool bAddRow, bool bTop)
-{
-	if (!LayoutWindow || TagetRow < 0 || TagetColumn < 0)
-	{
-		return false;
-	}
 	RemoveLayoutWindow(LayoutWindow);
-	if (bAddRow)
-	{
-		if (!AddLayoutRow(TagetRow, bTop))
-		{
-			return false;
-		}
-		if (VerticalLayoutCount > 1 && !bTop)
-		{
-			TagetRow++;
-		}
-	}
-	if (AddLayoutColumn(TagetRow, TagetColumn, bFront, LayoutWindow))
-	{
-		return false;
-	}
+	delete LayoutWindow;
 	return true;
 }
 
-bool MainEditorWindow::AddLayoutWindow(SLayoutWindow* LayoutWindow, int32 TagetRow, int32 TagetColumn, bool bFront, bool bAddRow, bool bTop)
+bool MainEditorWindow::MoveLayoutWindow(SLayoutWindow* LayoutWindow, SLayoutWindow* TargetLayoutWindow, bool bFront, bool bAddRow, bool bTop)
 {
-	if (bAddRow)
-	{
-		if (!AddLayoutRow(TagetRow, bTop))
-		{
-			return false;
-		}
-		if (VerticalLayoutCount > 1 && !bTop)
-		{
-			TagetRow++;
-		}
-	}
-	if (AddLayoutColumn(TagetRow, TagetColumn, bFront, LayoutWindow))
+	RefreshRowAndColumn();
+	RemoveLayoutWindow(LayoutWindow);
+	AddLayoutWindow(LayoutWindow, TargetLayoutWindow->Row, TargetLayoutWindow->Column, bFront, bAddRow, bTop);
+	return true;
+}
+
+bool MainEditorWindow::AddLayoutWindow(SLayoutWindow* LayoutWindow, int32 TargetRow, int32 TargetColumn, bool bFront, bool bAddRow, bool bTop)
+{
+	if (!LayoutWindow)
 	{
 		return false;
 	}
-	return true;
+	int32 LayoutsSize = (int32)Layouts.size();
+	if (TargetRow - (LayoutsSize - 1) > 1)
+	{
+		return false;
+	}
+	RowListLayoutData* rowListLayoutData;
+	static std::list<RowListLayoutData*>::iterator iter;
+	if (bAddRow)
+	{
+		rowListLayoutData = new RowListLayoutData();
+		if (Layouts.empty())
+		{
+			rowListLayoutData->Height = height;
+			Layouts.push_back(rowListLayoutData);
+		}
+		else
+		{
+			if (TargetRow == LayoutsSize)
+			{
+				Layouts.push_back(rowListLayoutData);
+				iter = Layouts.begin();
+				std::advance(iter, TargetRow - 1);
+			}
+			else
+			{
+				iter = Layouts.begin();
+				std::advance(iter, TargetRow);
+				if (!bTop)
+				{
+					iter++;
+				}
+				if (iter == Layouts.end())
+				{
+					Layouts.push_back(rowListLayoutData);
+				}
+				else
+				{
+					Layouts.insert(iter, rowListLayoutData);
+				}
+				iter = Layouts.begin();
+				std::advance(iter, TargetRow);
+				if (bTop)
+				{
+					iter++;
+				}
+			}
+			rowListLayoutData->Height = (*iter)->Height / 2;
+			(*iter)->Height = rowListLayoutData->Height;
+		}
+	}
+	else
+	{
+		iter = Layouts.begin();
+		std::advance(iter, TargetRow);
+		rowListLayoutData = *iter;
+	}
+
+	int32 LayoutListSize = (int32)rowListLayoutData->LayoutList.size();
+
+	if (TargetColumn - (LayoutListSize - 1) > 1 && !bAddRow)
+	{
+		return false;
+	}
+
+	static std::list<SLayoutWindow*>::iterator witer;
+	if (rowListLayoutData->LayoutList.empty())
+	{
+		LayoutWindow->width = width;
+		rowListLayoutData->LayoutList.push_back(LayoutWindow);
+	}
+	else
+	{
+		if (TargetColumn == LayoutListSize)
+		{
+			rowListLayoutData->LayoutList.push_back(LayoutWindow);
+			witer = rowListLayoutData->LayoutList.begin();
+			std::advance(witer, TargetColumn - 1);
+		}
+		else
+		{
+			witer = rowListLayoutData->LayoutList.begin();
+			std::advance(witer, TargetColumn);
+			if (!bFront)
+			{
+				witer++;
+			}
+			if (witer == rowListLayoutData->LayoutList.end())
+			{
+				rowListLayoutData->LayoutList.push_back(LayoutWindow);
+			}
+			else
+			{
+				rowListLayoutData->LayoutList.insert(witer, LayoutWindow);
+			}
+			witer = rowListLayoutData->LayoutList.begin();
+			std::advance(witer, TargetColumn);
+			if (bFront)
+			{
+				witer++;
+			}
+		}
+		LayoutWindow->width = (*witer)->width / 2;
+		(*witer)->width = LayoutWindow->width;
+	}
+	RefreshRowAndColumn();
+	LayoutWindow->mainEditorWindow = this;
 }
 
 void MainEditorWindow::Draw()
 {
-	ImGui::Begin("Splitter test", 0,
-		ImGuiWindowFlags_NoDecoration |
+	ImGui::Begin(WindowName.data(), 0, ImGuiWindowFlags_NoDecoration |
 		ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_MenuBar |
 		ImGuiWindowFlags_NoScrollWithMouse |
 		ImGuiWindowFlags_NoScrollbar);
+	ImGui::SetWindowSize(ImVec2((float)width, (float)height));
+	ImGui::SetWindowPos(ImVec2(0, 0));
+
 	ImGui::BeginMenuBar();
 	ImGui::MenuItem("File");
 	ImGui::MenuItem("Tool");
 	ImGui::MenuItem("Setting");
-	//float MenuBarHeight = ImGui::GetWindowHeight();
 	ImGui::EndMenuBar();
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-	static std::list<std::list<SLayoutWindow*>*>::iterator viter;
+	static std::list<RowListLayoutData*>::iterator iter;
 	static std::list<SLayoutWindow*>::iterator witer;
-	int32 VerticalIndex = 0;
-	int32 HorizontalIndex = 0;
-	float SplitterHeight = 0.f;
-	for (viter = Layouts.begin(); viter != Layouts.end();)
+	int32 Row = 0;
+	int32 Column = 0;
+	int32 RSize = (int32)Layouts.size();
+	int32 AllSplitterHeight = 4 * (RSize - 1);
+	float MouseDeltaY = ImGui::GetIO().MouseDelta.y;
+	float MouseDeltaX = ImGui::GetIO().MouseDelta.x;
+	for (iter = Layouts.begin(); iter != Layouts.end();)
 	{
-		float SplitterWidth = 0.f;
-		for (witer = (*viter)->begin(); witer != (*viter)->end();)
+		if (*iter)
 		{
-			float VerticalHeight = 0.f;
-			if (*witer)
+			Column = 0;
+			int32 CSize = (int32)(*iter)->LayoutList.size();
+			int32 AllSplitterWidth = 4 * (CSize - 1);
+			for (witer = (*iter)->LayoutList.begin(); witer != (*iter)->LayoutList.end();)
 			{
-				bool bLast = false;
-				if (++witer == (*viter)->end())
+				(*witer)->Row = Row;
+				(*witer)->Column = Column;
+				bool isLast = false;
+				if (Column == CSize - 1)
 				{
-					bLast = true;
+					isLast = true;
 				}
-				witer--;
-
-				if (VerticalIndex == VerticalLayoutCount - 1)
+				if (Row == RSize - 1)
 				{
-					VerticalHeight = VerticalLayoutHeight[VerticalIndex] - SplitterHeight - 75;
+					(*witer)->Draw((*iter)->Height - AllSplitterHeight - 75, isLast, AllSplitterWidth);
 				}
 				else
 				{
-					VerticalHeight = VerticalLayoutHeight[VerticalIndex];
+					(*witer)->Draw((*iter)->Height, isLast, AllSplitterWidth);
 				}
-				(*witer)->Draw(VerticalHeight, bLast, SplitterWidth);
-			}
-			witer++;
-			if (witer != (*viter)->end())
-			{
-				ImGui::SameLine();
-				std::ostringstream VerticalSplitterName;
-				VerticalSplitterName << "VerticalSplitter" << HorizontalIndex;
-				ImGui::InvisibleButton(VerticalSplitterName.str().data(), ImVec2(4.0f, VerticalHeight));
-				if (ImGui::IsItemActive()) {
+
+				if (++witer != (*iter)->LayoutList.end())
+				{
+					ImGui::SameLine();
+					std::ostringstream VerticalSplitterName;
+					VerticalSplitterName << "VerticalSplitter" << Column;
+					ImGui::InvisibleButton(VerticalSplitterName.str().data(), ImVec2(4.0f, (*iter)->Height));
+					if (ImGui::IsItemActive()) {
+						if ((*witer)->width - MouseDeltaX > 5)
+						{
+							(*witer)->width -= (int32)MouseDeltaX;
+							--witer;
+							if ((*witer)->width + MouseDeltaX > 5)
+							{
+								(*witer)->width += (int32)MouseDeltaX;
+								witer++;
+							}
+							else
+							{
+								witer++;
+								(*witer)->width += (int32)MouseDeltaX;
+							}
+						}
+					}
+					ImGui::SameLine();
 				}
-				ImGui::SameLine();
-				SplitterWidth += 4;
+				Column++;
 			}
-			HorizontalIndex++;
 		}
-		viter++;
-		if (viter != Layouts.end())
+		Row++;
+		iter++;
+
+		if (iter != Layouts.end())
 		{
 			std::ostringstream  HorizontalSplitterName;
-			HorizontalSplitterName << "HorizontalSplitter" << VerticalIndex;
-			ImGui::InvisibleButton(HorizontalSplitterName.str().data(), ImVec2(width, 4.0f));
+			HorizontalSplitterName << "HorizontalSplitter" << Row;
+			ImGui::InvisibleButton(HorizontalSplitterName.str().data(), ImVec2((float)width, 4.0f));
 			if (ImGui::IsItemActive()) {
+				if ((*iter)->Height - MouseDeltaY > 5)
+				{
+					(*iter)->Height -= (int32)MouseDeltaY;
+					--iter;
+					if ((*iter)->Height + MouseDeltaY > 5)
+					{
+						(*iter)->Height += (int32)MouseDeltaY;
+						iter++;
+					}
+					else
+					{
+						iter++;
+						(*iter)->Height += (int32)MouseDeltaY;
+					}
+				}
 			}
-			SplitterHeight += 4;
+			AllSplitterHeight += 4;
 		}
-		VerticalIndex++;
 	}
 	ImGui::PopStyleVar();
-
-	ImGui::SetWindowSize(ImVec2(width, height));
-	ImGui::SetWindowPos(ImVec2(0, 0));
 	ImGui::End();
 }
