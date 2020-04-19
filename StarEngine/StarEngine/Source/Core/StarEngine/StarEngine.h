@@ -14,10 +14,12 @@ public:
 	void Run();
 	void ShutDown();
 	bool bShutDown = false;
+	static StarEngine* GetInstance();
+	static StarEngine* _Instance;
+	SRender Render;
 private:
 	void Init();
 	void DispatchTick(float DeltaTime);
-	SRender Render;
 	SGarbageCollectionMgr* GarbageCollectionMgr;
 	SBaseWindow* BaseWindow;
 };

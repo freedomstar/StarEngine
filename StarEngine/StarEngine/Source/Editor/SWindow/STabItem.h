@@ -14,6 +14,7 @@ public:
 	void Draw() override;
 	static int32 STabItemIndex;
 	std::string Name;
+	bool isRender = false;
 private:
 };
 

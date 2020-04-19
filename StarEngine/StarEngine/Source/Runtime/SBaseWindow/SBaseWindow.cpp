@@ -66,8 +66,29 @@ bool SBaseWindow::CreateGlfwWindow(char* WindowName, int32 Width, int32 Height)
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
-		return false;
 	}
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glGenFramebuffers(1, &framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	// create a color attachment texture
+	glGenTextures(1, &textureColorbuffer);
+	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 800, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+	// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 800); // use a single renderbuffer object for both a depth AND stencil buffer.
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
+	// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+
 	ImguiInit();
 	return true;
 }
@@ -95,6 +116,8 @@ void SBaseWindow::GlfwTick(float DeltaTime)
 		this->Destroy();
 		return;
 	}
+	glfwMakeContextCurrent(glfwWindow);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	if (mainEditorWindow && !mainEditorWindow->ChangeLayoutFunList.empty())
 	{
 		std::list<std::function<void()>>::iterator fiter;
@@ -107,20 +130,22 @@ void SBaseWindow::GlfwTick(float DeltaTime)
 	}
 	ProcessInput();
 	glfwPollEvents();
+	int display_w, display_h;
+	glfwGetFramebufferSize(glfwWindow, &display_w, &display_h);
+	glViewport(0, 0, display_w, display_h);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+
 	if (mainEditorWindow)
 	{
 		mainEditorWindow->Draw();
 	}
 	ImGui::Render();
 
-	int display_w, display_h;
-	glfwGetFramebufferSize(glfwWindow, &display_w, &display_h);
-	glViewport(0, 0, display_w, display_h);
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(glfwWindow);
 }
@@ -159,6 +184,7 @@ void SBaseWindow::ImguiInit()
 		SLayoutWindow* LayoutWindow6 = new SLayoutWindow();
 		STabItem* Item5 = new STabItem();
 		LayoutWindow6->addTab(Item5);
+		Item5->isRender = true;
 
 		SLayoutWindow* LayoutWindow7 = new SLayoutWindow();
 		STabItem* Item6 = new STabItem();

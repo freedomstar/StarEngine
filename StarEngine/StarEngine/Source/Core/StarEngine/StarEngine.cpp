@@ -3,6 +3,17 @@
 
 #define MAX_DELTATIME 1.0f/60.0f
 
+StarEngine* StarEngine::_Instance = nullptr;
+
+StarEngine* StarEngine::GetInstance()
+{
+	if (_Instance == nullptr)
+	{
+		_Instance = new StarEngine();
+	}
+	return _Instance;
+};
+
 StarEngine::StarEngine()
 {
 }
@@ -44,11 +55,14 @@ void StarEngine::Init()
 	//GCThread.detach();
 
 	Render.Init();
-	//std::thread RenderThread(&SRender::Run, Render);
-	//RenderThread.detach();
 
 	BaseWindow = NewSObject<SBaseWindow>();
 	BaseWindow->CreateBaseWindow("StarEngine");
+
+	Render.baseWindow = BaseWindow;
+
+	std::thread RenderThread(&SRender::Run, Render);
+	RenderThread.detach();
 }
 
 void StarEngine::DispatchTick(float DeltaTime)

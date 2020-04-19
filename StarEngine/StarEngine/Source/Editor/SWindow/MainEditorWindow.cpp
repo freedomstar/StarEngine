@@ -213,6 +213,7 @@ bool MainEditorWindow::AddLayoutWindow(SLayoutWindow* LayoutWindow, int32 Target
 	}
 	RefreshRowAndColumn();
 	LayoutWindow->mainEditorWindow = this;
+	return true;
 }
 
 void MainEditorWindow::Draw()
@@ -237,6 +238,7 @@ void MainEditorWindow::Draw()
 	static std::list<SLayoutWindow*>::iterator witer;
 	int32 Row = 0;
 	int32 Column = 0;
+	int32 aColumn = 0;
 	int32 RSize = (int32)Layouts.size();
 	int32 AllSplitterHeight = 4 * (RSize - 1);
 	float MouseDeltaY = ImGui::GetIO().MouseDelta.y;
@@ -270,7 +272,7 @@ void MainEditorWindow::Draw()
 				{
 					ImGui::SameLine();
 					std::ostringstream VerticalSplitterName;
-					VerticalSplitterName << "VerticalSplitter" << Column;
+					VerticalSplitterName << "VerticalSplitter" << aColumn;
 					ImGui::InvisibleButton(VerticalSplitterName.str().data(), ImVec2(4.0f, (*iter)->Height));
 					if (ImGui::IsItemActive()) {
 						if ((*witer)->width - MouseDeltaX > 5)
@@ -292,6 +294,7 @@ void MainEditorWindow::Draw()
 					ImGui::SameLine();
 				}
 				Column++;
+				aColumn++;
 			}
 		}
 		Row++;

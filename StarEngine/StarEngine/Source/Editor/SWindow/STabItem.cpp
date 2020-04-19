@@ -2,6 +2,7 @@
 #include "imgui.h"
 #include "SLayoutWindow.h"
 #include "MainEditorWindow.h"
+#include "Core/StarEngine/StarEngine.h"
 #include <sstream>
 
 int32 STabItem::STabItemIndex = 0;
@@ -55,6 +56,13 @@ void STabItem::Draw()
 		}
 		ImGui::TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ");
 		ImGui::Text(Name.data());
+		if (isRender)
+		{
+			ImGui::GetWindowDrawList()->AddImage((void*)StarEngine::GetInstance()->Render.baseWindow->textureColorbuffer,
+				ImVec2(ImGui::GetCursorScreenPos()),
+				ImVec2(ImGui::GetCursorScreenPos().x + 800 / 2,
+					ImGui::GetCursorScreenPos().y + 800 / 2), ImVec2(0, 1), ImVec2(1, 0));
+		}
 		ImGui::EndTabItem();
 	}
 }

@@ -28,8 +28,12 @@ public:
 	std::list<BaseWindowInputAction> InputActionList;
 	void ImguiInit();
 	int32 WindowWidth, WindowHeight;
-private:
 	GLFWwindow* glfwWindow = nullptr;
+	unsigned int framebuffer;
+	unsigned int textureColorbuffer;
+	unsigned int rbo;
+private:
+
 	MainEditorWindow* mainEditorWindow;
 	bool bClose = false;
 };

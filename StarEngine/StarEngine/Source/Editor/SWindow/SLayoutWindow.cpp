@@ -75,61 +75,67 @@ void SLayoutWindow::Draw(float lineheight, bool bLastHorizontal, float SplitterW
 		{
 			IM_ASSERT(payload->DataSize == sizeof(DragItemData));
 			DragItemData payload_n = *(DragItemData*)payload->Data;
-			if (payload_n.item && payload_n.item->ParentLayoutWindow && payload_n.item->ParentLayoutWindow != this)
+			if (payload_n.item && payload_n.item->ParentLayoutWindow)
 			{
-				float LW = (float)width * 0.25f;
-				float RW = (float)width * 0.75f;
-				float TH = lineheight * 0.25f;
-				float BH = lineheight * 0.75f;
-				float RelativePosX = MousePos.x - LayoutPos.x;
-				float RelativePosY = MousePos.y - LayoutPos.y;
-				bool btop = false;
-				bool baddRow = false;
-				bool bfront = false;
-				bool baddColumn = false;
-				if (RelativePosX > 0 && RelativePosY > 0)
+				if (payload_n.item->ParentLayoutWindow == this && payload_n.item->ParentLayoutWindow->TabItems.size() <= 1)
 				{
-					if (RelativePosX < LW)
+				}
+				else
+				{
+					float LW = (float)width * 0.25f;
+					float RW = (float)width * 0.75f;
+					float TH = lineheight * 0.25f;
+					float BH = lineheight * 0.75f;
+					float RelativePosX = MousePos.x - LayoutPos.x;
+					float RelativePosY = MousePos.y - LayoutPos.y;
+					bool btop = false;
+					bool baddRow = false;
+					bool bfront = false;
+					bool baddColumn = false;
+					if (RelativePosX > 0 && RelativePosY > 0)
 					{
-						baddColumn = true;
-						bfront = true;
-					}
-					if (RelativePosX > RW)
-					{
-						baddColumn = true;
-					}
-					if (RelativePosY < TH && !baddColumn)
-					{
-						btop = true;
-						baddRow = true;
-					}
-					if (RelativePosY > BH && !baddColumn)
-					{
-						baddRow = true;
-					}
-					if (baddColumn || baddRow)
-					{
-						auto fun = [=]() {
-							//payload_n.item->ParentLayoutWindow->TabItems.remove(payload_n.item);
-							if (payload_n.item->ParentLayoutWindow->TabItems.size() == 1)
-							{
-								payload_n.item->ParentLayoutWindow->mainEditorWindow->MoveLayoutWindow(payload_n.item->ParentLayoutWindow, this, bfront, baddRow, btop);
-							}
-							else
-							{
-								payload_n.item->ParentLayoutWindow->TabItems.remove(payload_n.item);
-								if (payload_n.item->ParentLayoutWindow->TabItems.empty())
+						if (RelativePosX < LW)
+						{
+							baddColumn = true;
+							bfront = true;
+						}
+						if (RelativePosX > RW)
+						{
+							baddColumn = true;
+						}
+						if (RelativePosY < TH && !baddColumn)
+						{
+							btop = true;
+							baddRow = true;
+						}
+						if (RelativePosY > BH && !baddColumn)
+						{
+							baddRow = true;
+						}
+						if (baddColumn || baddRow)
+						{
+							auto fun = [=]() {
+								//payload_n.item->ParentLayoutWindow->TabItems.remove(payload_n.item);
+								if (payload_n.item->ParentLayoutWindow->TabItems.size() == 1)
 								{
-									payload_n.item->ParentLayoutWindow->mainEditorWindow->DeleteLayoutWindow(payload_n.item->ParentLayoutWindow);
-									payload_n.item->ParentLayoutWindow = nullptr;
+									payload_n.item->ParentLayoutWindow->mainEditorWindow->MoveLayoutWindow(payload_n.item->ParentLayoutWindow, this, bfront, baddRow, btop);
 								}
-								SLayoutWindow* newLayoutWindows = new SLayoutWindow();
-								newLayoutWindows->TabItems.push_back(payload_n.item);
-								payload_n.item->ParentLayoutWindow = newLayoutWindows;
-								this->mainEditorWindow->AddLayoutWindow(newLayoutWindows, this->Row, this->Column, bfront, baddRow, btop);
-							}
-						};
-						this->mainEditorWindow->ChangeLayoutFunList.push_back(std::bind(fun));
+								else
+								{
+									payload_n.item->ParentLayoutWindow->TabItems.remove(payload_n.item);
+									if (payload_n.item->ParentLayoutWindow->TabItems.empty())
+									{
+										payload_n.item->ParentLayoutWindow->mainEditorWindow->DeleteLayoutWindow(payload_n.item->ParentLayoutWindow);
+										payload_n.item->ParentLayoutWindow = nullptr;
+									}
+									SLayoutWindow* newLayoutWindows = new SLayoutWindow();
+									newLayoutWindows->TabItems.push_back(payload_n.item);
+									payload_n.item->ParentLayoutWindow = newLayoutWindows;
+									this->mainEditorWindow->AddLayoutWindow(newLayoutWindows, this->Row, this->Column, bfront, baddRow, btop);
+								}
+							};
+							this->mainEditorWindow->ChangeLayoutFunList.push_back(std::bind(fun));
+						}
 					}
 				}
 			}

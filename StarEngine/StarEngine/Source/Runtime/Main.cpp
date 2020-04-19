@@ -4,8 +4,8 @@
 
 int main(int args, char** AGR)
 {
-	StarEngine engine;
-	engine.Run();
-	engine.ShutDown();
+	StarEngine* engine = StarEngine::GetInstance();
+	engine->Run();
+	engine->ShutDown();
 	return 0;
 }
