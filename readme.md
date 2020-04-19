@@ -1,6 +1,5 @@
 My graph program dream playground~
 
-Project dependent boost 1.72 libraries,please download and compile boost librarie,then config the project before run~
 
 # Target:
 
