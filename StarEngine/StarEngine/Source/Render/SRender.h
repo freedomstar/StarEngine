@@ -42,7 +42,7 @@ public:
 	SBaseWindow* baseWindow = nullptr;
 	GLFWwindow* glfwWindow = nullptr;
 	//std::atomic<std::queue<DrawCallData>> DrawList;
-
+	void CreateGLRenderContext();
 private:
 	void OpenglInit();
 	void DirectX12Init();
