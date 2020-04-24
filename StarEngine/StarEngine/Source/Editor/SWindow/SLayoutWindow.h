@@ -18,5 +18,7 @@ public:
 	std::list<STabItem*> TabItems;
 	MainEditorWindow* mainEditorWindow;
 	void addTab(STabItem* tab);
+	float realHeight = 0.f;
+	float realWidth = 0.f;
 	//float width = 0.f;
 };

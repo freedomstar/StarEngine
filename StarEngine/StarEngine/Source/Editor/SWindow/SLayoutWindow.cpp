@@ -41,11 +41,14 @@ void SLayoutWindow::Draw(float lineheight, bool bLastHorizontal, float SplitterW
 	if (bLastHorizontal)
 	{
 		ImGui::BeginChild(WindowName.data(), ImVec2(width - 15 - SplitterWidth, lineheight), true);
+		realWidth = width - 15 - SplitterWidth;
 	}
 	else
 	{
 		ImGui::BeginChild(WindowName.data(), ImVec2(width, lineheight), true);
+		realWidth = width;
 	}
+	realHeight = lineheight;
 	if (ImGui::BeginTabBar(TabsName.data(), ImGuiTabBarFlags_Reorderable))
 	{
 		std::list<STabItem*>::iterator iter;
