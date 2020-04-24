@@ -36,6 +36,10 @@ void SRender::CreateGLRenderContext()
 {
 	glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 	glfwWindow = glfwCreateWindow(800, 800, "GLRenderContext", NULL, baseWindow->glfwWindow);
+}
+
+void SRender::Run()
+{
 	glfwMakeContextCurrent(glfwWindow);
 	glGenFramebuffers(1, &baseWindow->framebuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, baseWindow->framebuffer);
@@ -51,10 +55,6 @@ void SRender::CreateGLRenderContext()
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, baseWindow->rbo);
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
-}
-
-void SRender::Run()
-{
 	while (true)
 	{
 		Tick();
