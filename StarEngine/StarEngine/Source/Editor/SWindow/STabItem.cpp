@@ -24,6 +24,13 @@ void STabItem::Draw()
 	SWidget::Draw();
 	if (ImGui::BeginTabItem(Name.data()))
 	{
+		if (isRender && ParentLayoutWindow)
+		{
+			ImGui::GetWindowDrawList()->AddImage((void*)StarEngine::GetInstance()->Render.baseWindow->textureColorbuffer,
+				ImVec2(ImGui::GetCursorScreenPos()),
+				ImVec2(ImGui::GetCursorScreenPos().x + ParentLayoutWindow->realWidth,
+					ImGui::GetCursorScreenPos().y + ParentLayoutWindow->realHeight), ImVec2(0, 1), ImVec2(1, 0));
+		}
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None | ImGuiDragDropFlags_SourceAllowNullID))
 		{
 			DragItemData data;
@@ -54,19 +61,9 @@ void STabItem::Draw()
 			}
 			ImGui::EndDragDropTarget();
 		}
+		ImGui::TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ");
+		ImGui::Text(Name.data());
 
-		if (isRender && ParentLayoutWindow)
-		{
-			ImGui::GetWindowDrawList()->AddImage((void*)StarEngine::GetInstance()->Render.baseWindow->textureColorbuffer,
-				ImVec2(ImGui::GetCursorScreenPos()),
-				ImVec2(ImGui::GetCursorScreenPos().x + ParentLayoutWindow->realWidth,
-					ImGui::GetCursorScreenPos().y + ParentLayoutWindow->realHeight), ImVec2(0, 1), ImVec2(1, 0));
-		}
-		else
-		{
-			ImGui::TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ");
-			ImGui::Text(Name.data());
-		}
 		ImGui::EndTabItem();
 	}
 }
