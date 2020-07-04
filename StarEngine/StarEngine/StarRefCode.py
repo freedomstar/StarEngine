@@ -16,6 +16,7 @@ class SFunction:
         self.FunctionName = ''
         self.ReturnType = ''
         self.ParmsDic = {}
+        self.ParmSequence = []
 
 
 def ScanFile(directory, prefix=None, postfix=None):
@@ -280,12 +281,14 @@ def GetPropertyFunctionWord(LineStr):
         ParmType = ''.join(reversed(ParmType))
         if ParmName != "":
             ParmDic[ParmName] = ParmType
+            f.ParmSequence.append(ParmName)
     FunctionName = ''.join(reversed(FunctionName))
     ReturnType = ''.join(reversed(ReturnType))
     f.ParmsDic = ParmDic
     f.FunctionName = FunctionName
     f.ReturnType = ReturnType
     Functions.append(f)
+    f.ParmSequence.reverse()
     return
 
 
@@ -313,7 +316,7 @@ def writeConfigCode(className, lineNum, pointPropertyDic, fileName, Fpath):
         # print(fun.FunctionName)
         # print(fun.ReturnType)
         parmNum = 0
-        for key in fun.ParmsDic.keys():
+        for key in fun.ParmSequence:
             parmNum += 1
             if fun.ParmsDic[key] == "float":
                 fun.ParmsDic[key] = "double"
@@ -332,7 +335,6 @@ def writeConfigCode(className, lineNum, pointPropertyDic, fileName, Fpath):
             starcode += "}\n"
         else:
             starcode += "}\\\n"
-    #starcode += fileName + "_STAR_DEFINE_CODE_" + str(lineNum)+"\n"
     starcode += "//"+postfixFileName+"_STAR_DEFINE_CODE_" + str(lineNum)+"_END \n \n"
     # print(starcode)
     if not os.path.exists(os.getcwd()+"\\StarRefCode"):
@@ -390,7 +392,7 @@ for Fpath in Fpathlist:
             if refcodeMetaData[Fpath] != lastchangetime:
                 refcodeMetaData[Fpath] = os.stat(Fpath).st_mtime
             else:
-                 continue
+                continue
         else:
             refcodeMetaData[Fpath] = os.stat(Fpath).st_mtime
     file_object.seek(0)

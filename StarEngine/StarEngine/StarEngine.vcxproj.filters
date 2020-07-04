@@ -131,6 +131,9 @@
     <ClCompile Include="Source\Editor\SWindow\STabItem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\SWindow\SRenderTabItem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ThirdParty\imgui\imconfig.h">
@@ -233,6 +236,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\SWindow\STabItem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\SWindow\SRenderTabItem.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
